@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us | {{ site_settings.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <span class="text-cyan small fw-bold text-uppercase">Get in Touch</span>
+        <h1 class="fw-bold text-white">Contact Nehru Place IT Services</h1>
+        <p class="text-muted">Have a query regarding IT products, web development, CCTV, or laptop repair? Contact our technical support team.</p>
+    </div>
+
+    <div class="row g-5">
+        <!-- CONTACT INFORMATION -->
+        <div class="col-lg-5">
+            <div class="glass-card p-4 p-md-5 h-100">
+                <h4 class="text-white fw-bold mb-4"><i class="bi bi-geo-alt text-cyan me-2"></i> Our Location & Info</h4>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="bg-dark p-3 rounded-circle text-cyan fs-4 border border-secondary"><i class="bi bi-building"></i></div>
+                    <div>
+                        <h6 class="text-white fw-bold mb-1">Office Address</h6>
+                        <p class="text-muted small mb-0">{{ site_settings.address }}</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="bg-dark p-3 rounded-circle text-cyan fs-4 border border-secondary"><i class="bi bi-telephone"></i></div>
+                    <div>
+                        <h6 class="text-white fw-bold mb-1">Phone Numbers</h6>
+                        <p class="text-muted small mb-0">{{ site_settings.phone }}</p>
+                        {% if site_settings.alternate_phone %}<p class="text-muted small mb-0">{{ site_settings.alternate_phone }}</p>{% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="bg-dark p-3 rounded-circle text-cyan fs-4 border border-secondary"><i class="bi bi-envelope"></i></div>
+                    <div>
+                        <h6 class="text-white fw-bold mb-1">Email Address</h6>
+                        <p class="text-muted small mb-0">{{ site_settings.email }}</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="bg-dark p-3 rounded-circle text-cyan fs-4 border border-secondary"><i class="bi bi-clock"></i></div>
+                    <div>
+                        <h6 class="text-white fw-bold mb-1">Working Hours</h6>
+                        <p class="text-muted small mb-0">Monday – Saturday: 10:00 AM – 8:00 PM</p>
+                        <p class="text-muted small mb-0">Sunday: Closed</p>
+                    </div>
+                </div>
+
+                {% if site_settings.whatsapp_number %}
+                <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20have%20an%20enquiry%20regarding%20IT%20services." target="_blank" class="btn btn-cyan w-100 mt-3">
+                    <i class="bi bi-whatsapp me-2"></i> Chat on WhatsApp Now
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- CONTACT FORM -->
+        <div class="col-lg-7">
+            <div class="glass-card p-4 p-md-5 border-cyan">
+                <h4 class="text-white fw-bold mb-4"><i class="bi bi-send text-cyan me-2"></i> Send Us a Message</h4>
+
+                <form method="post" action="{% url 'core:contact' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.source }}
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-white">Your Name *</label>
+                            {{ form.customer_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white">Mobile / WhatsApp *</label>
+                            {{ form.phone }}
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-white">Email Address</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white">Location / City</label>
+                            {{ form.location }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-white">Message / Requirement Details *</label>
+                        {{ form.message }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-muted small">Attach Document / Requirement Photo (Optional)</label>
+                        {{ form.attachment }}
+                        <div class="form-text text-muted small">Max 5MB. Formats: PDF, DOC, DOCX, JPG, PNG, WEBP</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-cyan btn-lg w-100">
+                        Send Message <i class="bi bi-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

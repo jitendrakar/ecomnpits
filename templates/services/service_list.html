@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}IT Services & Solutions | {{ site_settings.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <span class="text-cyan small fw-bold text-uppercase">Nehru Place IT Platform</span>
+        <h2 class="fw-bold text-white">Professional IT Services</h2>
+        <p class="text-muted">Website Engineering, CCTV Surveillance, Office Networking, Hardware Repair & Maintenance.</p>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-5">
+        <a href="{% url 'services:service_list' %}" class="btn btn-sm {% if not current_category %}btn-cyan{% else %}btn-outline-cyan{% endif %}">
+            All Services
+        </a>
+        {% for cat in categories %}
+            <a href="{% url 'services:service_list' %}?category={{ cat.slug }}" class="btn btn-sm {% if current_category and current_category.slug == cat.slug %}btn-cyan{% else %}btn-outline-cyan{% endif %}">
+                <i class="bi {{ cat.icon }} me-1"></i> {{ cat.name }}
+            </a>
+        {% endfor %}
+    </div>
+
+    <div class="row g-4">
+        {% for service in services %}
+        <div class="col-lg-4 col-md-6">
+            <div class="glass-card p-4 h-100 d-flex flex-column">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="bg-dark p-3 rounded-3 text-cyan fs-3 border border-secondary">
+                        <i class="bi {{ service.category.icon }}"></i>
+                    </div>
+                    <div>
+                        <span class="text-muted small d-block">{{ service.category.name }}</span>
+                        <h5 class="text-white fw-bold mb-0">{{ service.name }}</h5>
+                    </div>
+                </div>
+
+                <p class="text-muted small mb-3 flex-grow-1">{{ service.short_description }}</p>
+
+                {% if service.features.exists %}
+                <ul class="list-unstyled small text-muted mb-4">
+                    {% for feat in service.features.all|slice:":4" %}
+                        <li class="mb-1"><i class="bi bi-check-circle-fill text-cyan me-2"></i> {{ feat.feature_text }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <div class="d-flex justify-content-between align-items-center mb-3 pt-2 border-top border-secondary opacity-75">
+                    <span class="text-muted small">Starting Price</span>
+                    <span class="fw-bold text-cyan">₹{{ service.starting_price|default:"1,500" }} <small class="text-muted fs-7">/ {{ service.price_unit }}</small></span>
+                </div>
+
+                <a href="{% url 'services:service_detail' service.slug %}" class="btn btn-sm btn-cyan w-100 mt-auto">
+                    View Service Packages & Quote <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center text-muted py-5 glass-card">
+            No services currently listed under this category.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Thank You | {{ site_settings.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="glass-card p-5 border-cyan">
+                <div class="bg-dark text-cyan rounded-circle p-4 display-3 d-inline-flex mb-4 border border-cyan">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <h2 class="fw-bold text-white mb-2">Thank You!</h2>
+                <p class="text-muted fs-5 mb-4">
+                    Your enquiry has been submitted successfully to Nehru Place IT Services.
+                </p>
+                <p class="text-muted small mb-4">
+                    Our technical representatives will review your request and contact you shortly via call or WhatsApp.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                    {% if site_settings.whatsapp_number %}
+                    <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20just%20submitted%20an%20enquiry%20on%20your%20website." 
+                       target="_blank" 
+                       class="btn btn-cyan btn-lg">
+                        <i class="bi bi-whatsapp me-2"></i> WhatsApp Us Now
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'core:home' %}" class="btn btn-outline-cyan btn-lg">
+                        <i class="bi bi-house me-2"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

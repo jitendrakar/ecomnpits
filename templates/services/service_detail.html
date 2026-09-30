@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ service.name }} | {{ site_settings.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'services:service_list' %}">Services</a></li>
+            <li class="breadcrumb-item active text-white" aria-current="page">{{ service.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5 align-items-center mb-5">
+        <div class="col-lg-7">
+            <span class="badge bg-dark border border-cyan text-cyan px-3 py-1 mb-2">{{ service.category.name }}</span>
+            <h1 class="fw-bold text-white mb-3">{{ service.name }}</h1>
+            <p class="text-muted fs-5 mb-4">{{ service.short_description }}</p>
+
+            <div class="d-flex flex-wrap gap-4 p-3 glass-card mb-4">
+                <div>
+                    <span class="text-muted small d-block">Starting Rate</span>
+                    <span class="fs-4 fw-bold text-cyan">₹{{ service.starting_price|default:"1,500" }}</span>
+                    <small class="text-muted">/ {{ service.price_unit }}</small>
+                </div>
+                <div class="border-start border-secondary ps-4">
+                    <span class="text-muted small d-block">Delivery Timeframe</span>
+                    <span class="fs-4 fw-bold text-white">{{ service.delivery_time }}</span>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3">
+                <button type="button" class="btn btn-cyan btn-lg" data-bs-toggle="modal" data-bs-target="#serviceEnquiryModal">
+                    <i class="bi bi-send me-2"></i> Request Service Quote
+                </button>
+                <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20am%20interested%20in%20service:%20{{ service.name|urlencode }}.%20Please%20provide%20pricing%20details." 
+                   target="_blank" 
+                   class="btn btn-outline-cyan btn-lg">
+                    <i class="bi bi-whatsapp me-2"></i> Chat on WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="glass-card p-4">
+                <h5 class="text-white fw-bold mb-3"><i class="bi bi-check2-circle text-cyan me-2"></i> Service Features Included</h5>
+                <ul class="list-unstyled mb-0">
+                    {% for feat in service.features.all %}
+                        <li class="mb-3 d-flex align-items-start text-muted">
+                            <i class="bi bi-check-circle-fill text-cyan me-2 mt-1"></i>
+                            <span>{{ feat.feature_text }}</span>
+                        </li>
+                    {% empty %}
+                        <li class="text-muted small">Standard SLA & Quality Guarantee Included.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- PACKAGES COMPARISON -->
+    {% if packages.exists %}
+    <div class="mt-5">
+        <div class="text-center mb-5">
+            <span class="text-cyan small fw-bold text-uppercase">Transparent Pricing</span>
+            <h2 class="fw-bold text-white">Select Service Package</h2>
+        </div>
+
+        <div class="row g-4">
+            {% for pkg in packages %}
+            <div class="col-lg-4 col-md-6">
+                <div class="glass-card p-4 h-100 d-flex flex-column {% if pkg.is_featured %}border-cyan shadow-lg{% endif %}">
+                    {% if pkg.is_featured %}<span class="badge bg-primary mb-2 align-self-start">MOST POPULAR</span>{% endif %}
+                    <h4 class="text-white fw-bold mb-2">{{ pkg.name }}</h4>
+                    <p class="text-muted small mb-3">{{ pkg.description }}</p>
+
+                    <div class="mb-4">
+                        <span class="display-6 fw-bold text-cyan">₹{{ pkg.price|floatformat:2 }}</span>
+                    </div>
+
+                    <ul class="list-unstyled text-muted small mb-4 flex-grow-1">
+                        {% for f in pkg.feature_list %}
+                            <li class="mb-2"><i class="bi bi-check2 text-cyan me-2"></i> {{ f }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <button type="button" class="btn btn-cyan w-100 mt-auto" data-bs-toggle="modal" data-bs-target="#serviceEnquiryModal">
+                        Choose {{ pkg.name }}
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- FULL DESCRIPTION -->
+    <div class="glass-card p-4 mt-5">
+        <h4 class="text-white fw-bold mb-3">Service Details & Workflow</h4>
+        <p class="text-muted">{{ service.description|linebreaks }}</p>
+    </div>
+</div>
+
+<!-- ENQUIRY MODAL -->
+<div class="modal fade" id="serviceEnquiryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-card text-white">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title fw-bold text-cyan"><i class="bi bi-envelope me-2"></i> Request Service Quote</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'enquiries:submit' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {{ enquiry_form.source }}
+                    {{ enquiry_form.service }}
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Service Title</label>
+                        <input type="text" class="form-control" value="{{ service.name }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Your Name *</label>
+                        {{ enquiry_form.customer_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mobile Number *</label>
+                        {{ enquiry_form.phone }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email Address</label>
+                        {{ enquiry_form.email }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location / City</label>
+                        {{ enquiry_form.location }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Requirement Details</label>
+                        {{ enquiry_form.message }}
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-cyan" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-cyan">Submit Quote Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

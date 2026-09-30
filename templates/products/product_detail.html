@@ -1,0 +1,375 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | {{ site_settings.company_name }}{% endblock %}
+{% block meta_description %}{{ product.seo_description|default:product.short_description }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- BREADCRUMB -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}">Products</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}?category={{ product.category.slug }}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active text-white" aria-current="page">{{ product.name|truncatechars:35 }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <!-- PRODUCT IMAGES -->
+        <div class="col-lg-6">
+            <div class="glass-card p-4 text-center mb-3">
+                {% if product.primary_image %}
+                    <img id="mainProductImg" src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="img-fluid rounded-3" style="max-height: 420px; object-fit: contain;">
+                {% else %}
+                    <i class="bi bi-laptop display-1 text-muted"></i>
+                {% endif %}
+            </div>
+
+            {% if product.images.count > 1 %}
+            <div class="d-flex gap-2 overflow-auto pb-2">
+                {% for img in product.images.all %}
+                <div class="glass-card p-2 cursor-pointer border-secondary" style="width: 80px; height: 80px;" onclick="document.getElementById('mainProductImg').src='{{ img.image.url }}';">
+                    <img src="{{ img.image.url }}" alt="{{ img.alt_text }}" class="w-100 h-100 object-fit-contain">
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- PRODUCT DETAILS & MARKETPLACE CTA -->
+        <div class="col-lg-6">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="badge bg-dark border border-cyan text-cyan px-3 py-1">{{ product.category.name }}</span>
+                <span class="badge-stock {% if product.stock_status == 'IN_STOCK' %}badge-in-stock{% else %}badge-out-stock{% endif %}">
+                    {{ product.get_stock_status_display }}
+                </span>
+            </div>
+
+            <h1 class="fw-bold text-white mb-2">{{ product.name }}</h1>
+            <p class="text-muted small mb-3">SKU: <span class="text-white">{{ product.sku }}</span> {% if product.brand %} | Brand: <span class="text-cyan fw-bold">{{ product.brand.name }}</span>{% endif %}</p>
+
+            <div class="d-flex align-items-baseline gap-3 mb-4 p-3 glass-card">
+                <div>
+                    <span class="text-muted small d-block">Store Price</span>
+                    <span class="display-6 fw-bold text-cyan">₹{{ product.current_price|floatformat:2 }}</span>
+                </div>
+                {% if product.discount_price and product.discount_price < product.price %}
+                    <div>
+                        <span class="text-muted small d-block">MRP</span>
+                        <span class="fs-5 text-dim text-decoration-line-through">₹{{ product.price|floatformat:2 }}</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <p class="text-muted mb-4">{{ product.short_description }}</p>
+
+            <!-- EXTERNAL MARKETPLACE PURCHASING BUTTONS -->
+            <div class="p-4 glass-card mb-4 border-cyan">
+                <h6 class="text-white fw-bold mb-3"><i class="bi bi-cart-check text-cyan me-2"></i> BUY ONLINE FROM MARKETPLACES</h6>
+                <p class="text-muted small mb-3">Click below to purchase directly from official marketplace sellers:</p>
+                
+                <div class="d-flex flex-wrap gap-3">
+                    {% for link in marketplace_links %}
+                        <a href="{% url 'products:marketplace_redirect' link.id %}" target="_blank" class="marketplace-badge mp-{{ link.marketplace.slug }} px-4 py-2 fs-6">
+                            Buy on {{ link.marketplace.name }} <i class="bi bi-box-arrow-up-right ms-1"></i>
+                        </a>
+                    {% empty %}
+                        <div class="text-muted small">Online marketplace links not currently configured. Contact store for direct dispatch.</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- DIRECT INQUIRY BUTTONS -->
+            <div class="d-flex flex-wrap gap-3 mb-4">
+                <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20am%20interested%20in%20purchasing:%20{{ product.name|urlencode }}%20(SKU:%20{{ product.sku }}).%20Please%20provide%20details." 
+                   target="_blank" 
+                   class="btn btn-outline-cyan btn-lg">
+                    <i class="bi bi-whatsapp me-2"></i> Ask About This Product
+                </a>
+                <button type="button" class="btn btn-cyan btn-lg" data-bs-toggle="modal" data-bs-target="#productEnquiryModal">
+                    <i class="bi bi-envelope me-2"></i> Send Quote Enquiry
+                </button>
+            </div>
+
+            <!-- WARRANTY INFO CARD -->
+            <div class="glass-card p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-shield-check display-6 text-cyan"></i>
+                    <div>
+                        <h6 class="text-white fw-bold mb-0">Warranty Information</h6>
+                        <small class="text-muted">{{ product.warranty_period }} — {{ product.warranty_type }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SPECIFICATIONS, DESCRIPTION, WARRANTY, COMPARISON & LEARNING TABS -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <ul class="nav nav-tabs border-secondary mb-4" id="prodTab" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active text-white fw-bold" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs" type="button" role="tab">
+                            <i class="bi bi-list-check text-cyan me-1"></i> Detailed Specifications
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link text-white fw-bold" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc" type="button" role="tab">
+                            <i class="bi bi-file-text text-cyan me-1"></i> Full Description
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link text-white fw-bold" id="warranty-tab" data-bs-toggle="tab" data-bs-target="#warranty" type="button" role="tab">
+                            <i class="bi bi-shield-check text-cyan me-1"></i> Warranty Terms
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link text-white fw-bold" id="comparison-tab" data-bs-toggle="tab" data-bs-target="#comparison" type="button" role="tab">
+                            <i class="bi bi-arrow-left-right text-cyan me-1"></i> Comparison Guide
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link text-white fw-bold" id="learning-tab" data-bs-toggle="tab" data-bs-target="#learning" type="button" role="tab">
+                            <i class="bi bi-play-circle-fill text-cyan me-1"></i> Learning & Video Resources
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="prodTabContent">
+                    <!-- 1. DETAILED SPECIFICATIONS TAB -->
+                    <div class="tab-pane fade show active" id="specs" role="tabpanel">
+                        <h5 class="text-white fw-bold mb-3"><i class="bi bi-sliders text-cyan me-2"></i> Technical Specifications Matrix</h5>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-striped table-hover align-middle border-secondary">
+                                <tbody>
+                                    <tr>
+                                        <th class="w-30 text-cyan">Product Name</th>
+                                        <td class="fw-bold">{{ product.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-30 text-cyan">SKU / Model Code</th>
+                                        <td>{{ product.sku }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-30 text-cyan">Category</th>
+                                        <td>{{ product.category.name }}</td>
+                                    </tr>
+                                    {% if product.brand %}
+                                    <tr>
+                                        <th class="w-30 text-cyan">Brand</th>
+                                        <td>{{ product.brand.name }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% for spec in product.specifications.all %}
+                                    <tr>
+                                        <th class="w-30 text-cyan">{{ spec.specification_name }}</th>
+                                        <td>{{ spec.specification_value }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    {% endfor %}
+                                    <tr>
+                                        <th class="w-30 text-cyan">Warranty Coverage</th>
+                                        <td>{{ product.warranty_period }} ({{ product.warranty_type }})</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 2. FULL DESCRIPTION TAB -->
+                    <div class="tab-pane fade" id="desc" role="tabpanel">
+                        <h5 class="text-white fw-bold mb-3"><i class="bi bi-file-earmark-text text-cyan me-2"></i> Comprehensive Overview</h5>
+                        <div class="text-muted leading-relaxed">
+                            {% if product.description %}
+                                {{ product.description|linebreaks }}
+                            {% else %}
+                                <p>{{ product.short_description }}</p>
+                                <p>This premium hardware model from <strong>{{ product.brand.name|default:"Nehru Place IT Services" }}</strong> is built to deliver top-tier reliability, energy efficiency, and high performance for commercial and personal deployments.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- 3. WARRANTY TERMS TAB -->
+                    <div class="tab-pane fade" id="warranty" role="tabpanel">
+                        <div class="d-flex align-items-center gap-3 mb-4 p-3 bg-secondary-dark rounded-3 border border-secondary">
+                            <i class="bi bi-patch-check-fill display-5 text-cyan"></i>
+                            <div>
+                                <h5 class="text-white fw-bold mb-1">Official {{ product.warranty_period }} {{ product.warranty_type }}</h5>
+                                <p class="text-muted small mb-0">Guaranteed tech support and authorized hardware replacement by Nehru Place IT Services.</p>
+                            </div>
+                        </div>
+
+                        <h6 class="text-cyan fw-bold mb-2">Warranty Details:</h6>
+                        <p class="text-muted mb-4">{{ product.warranty_details|default:"Includes complete hardware failure protection, diagnostic inspections, component replacement, and direct tech support during normal operating hours." }}</p>
+
+                        <h6 class="text-white fw-bold mb-2">Terms & Service Guidelines:</h6>
+                        <ul class="text-muted small">
+                            <li class="mb-2">Physical, liquid damage or unauthorized tampering voids hardware warranty.</li>
+                            <li class="mb-2">Retain original invoice and SKU barcode for instant warranty processing.</li>
+                            <li class="mb-2">For items purchased via Amazon, Flipkart, or Meesho, present invoice for authorized service support.</li>
+                        </ul>
+
+                        <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20need%20warranty%20support%20for:%20{{ product.name|urlencode }}%20(SKU:%20{{ product.sku }})." target="_blank" class="btn btn-sm btn-cyan mt-2">
+                            <i class="bi bi-shield-lock me-1"></i> Contact Warranty Helpdesk
+                        </a>
+                    </div>
+
+                    <!-- 4. COMPARISON GUIDE TAB -->
+                    <div class="tab-pane fade" id="comparison" role="tabpanel">
+                        <h5 class="text-white fw-bold mb-3"><i class="bi bi-arrow-left-right text-cyan me-2"></i> Category Comparison & Buying Guide</h5>
+                        
+                        {% if product.category.comparison_guide_html %}
+                            <div class="table-responsive">
+                                {{ product.category.comparison_guide_html|safe }}
+                            </div>
+                        {% else %}
+                            <p class="text-muted mb-4">Compare key specs of <strong>{{ product.name }}</strong> against standard industry tier alternatives:</p>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-bordered align-middle text-center">
+                                    <thead>
+                                        <tr class="table-primary text-dark">
+                                            <th>Feature / Parameter</th>
+                                            <th class="bg-cyan text-dark fw-bold">{{ product.name|truncatechars:25 }} (This Item)</th>
+                                            <th>Standard Market Alternative</th>
+                                            <th>Basic Entry Level</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="small text-muted">
+                                        <tr>
+                                            <td class="text-start fw-bold text-white">Build & Material Quality</td>
+                                            <td><span class="badge bg-success">Industrial Grade</span></td>
+                                            <td>Standard Plastic</td>
+                                            <td>Generic Grade</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start fw-bold text-white">Warranty Coverage</td>
+                                            <td class="text-cyan fw-bold">{{ product.warranty_period }}</td>
+                                            <td>6 Months</td>
+                                            <td>No Warranty</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start fw-bold text-white">After-Sales Direct Support</td>
+                                            <td><i class="bi bi-check-circle-fill text-success fs-5"></i> Nehru Place IT Support</td>
+                                            <td>Dealer Dependent</td>
+                                            <td><i class="bi bi-x-circle-fill text-danger fs-5"></i> None</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start fw-bold text-white">Multi-Marketplace Verification</td>
+                                            <td><span class="badge bg-info text-dark">Amazon / Flipkart Verified</span></td>
+                                            <td>Unverified</td>
+                                            <td>Unverified</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- 5. LEARNING & VIDEO RESOURCES TAB -->
+                    <div class="tab-pane fade" id="learning" role="tabpanel">
+                        <h5 class="text-white fw-bold mb-3"><i class="bi bi-film text-cyan me-2"></i> Learning, Installation & Video Tutorials</h5>
+                        
+                        <div class="row g-4 align-items-center">
+                            <div class="col-lg-6">
+                                <div class="ratio ratio-16x9 rounded-3 overflow-hidden border border-secondary shadow-lg">
+                                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Product Setup & Tutorial Guide" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <h6 class="text-white fw-bold mb-2">Step-by-Step Installation & Usage Guide</h6>
+                                <ol class="text-muted small ps-3 mb-4">
+                                    <li class="mb-2"><strong>Unboxing & Inspection:</strong> Verify SKU barcode tag and check all bundled components inside the box.</li>
+                                    <li class="mb-2"><strong>Setup & Wiring:</strong> Connect unit to recommended power supply and follow standard pinout wiring standards.</li>
+                                    <li class="mb-2"><strong>Configuration:</strong> Power on device and configure operational parameters as shown in the video guide.</li>
+                                    <li class="mb-2"><strong>Technical Assistance:</strong> For urgent installation help, contact certified Nehru Place IT engineers.</li>
+                                </ol>
+
+                                <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20need%20installation%20help%20for%20{{ product.name|urlencode }}." target="_blank" class="btn btn-outline-cyan btn-sm">
+                                    <i class="bi bi-whatsapp me-1"></i> Request Tech Setup Assistance
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RELATED PRODUCTS -->
+    {% if related_products %}
+    <div class="mt-5">
+        <h3 class="fw-bold text-white mb-4">Related Products</h3>
+        <div class="row g-4">
+            {% for rp in related_products %}
+            <div class="col-lg-3 col-md-6">
+                <div class="glass-card product-card p-3">
+                    <div class="product-img-wrapper">
+                        {% if rp.primary_image %}
+                            <img src="{{ rp.primary_image.image.url }}" alt="{{ rp.name }}" class="product-img">
+                        {% endif %}
+                    </div>
+                    <div class="p-3">
+                        <h6 class="text-white fw-bold mb-2">
+                            <a href="{% url 'products:product_detail' rp.slug %}" class="text-white">{{ rp.name|truncatechars:40 }}</a>
+                        </h6>
+                        <div class="price-tag fs-6">₹{{ rp.current_price|floatformat:2 }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- ENQUIRY MODAL -->
+<div class="modal fade" id="productEnquiryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-card text-white">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title fw-bold text-cyan"><i class="bi bi-envelope me-2"></i> Request Product Quote</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'enquiries:submit' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {{ enquiry_form.source }}
+                    {{ enquiry_form.product }}
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Product Name</label>
+                        <input type="text" class="form-control" value="{{ product.name }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Your Name *</label>
+                        {{ enquiry_form.customer_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mobile Number *</label>
+                        {{ enquiry_form.phone }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email Address</label>
+                        {{ enquiry_form.email }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location / City</label>
+                        {{ enquiry_form.location }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message / Requirement</label>
+                        {{ enquiry_form.message }}
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-cyan" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-cyan">Submit Enquiry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

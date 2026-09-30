@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Service & Support Calculator | {{ site_settings.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <span class="text-cyan small fw-bold text-uppercase"><i class="bi bi-calculator me-1"></i> Interactive Quotation Tool</span>
+        <h1 class="fw-bold text-white">Service and Support Calculator</h1>
+        <p class="text-muted">Enter your equipment, wiring & service requirements to generate a real-time price estimation.</p>
+    </div>
+
+    <div class="row g-5">
+        <!-- CALCULATOR INPUT FORM -->
+        <div class="col-lg-6">
+            <div class="glass-card p-4 p-md-5">
+                <h4 class="text-white fw-bold mb-4"><i class="bi bi-sliders text-cyan me-2"></i> Enter Setup Parameters</h4>
+
+                <form id="cctvCalculatorForm" 
+                      data-camera-price="{{ cctv_pricing.camera_price }}"
+                      data-dvr-price="{{ cctv_pricing.dvr_nvr_price }}"
+                      data-hdd-price="{{ cctv_pricing.hdd_price }}"
+                      data-power-supply-price="{{ cctv_pricing.power_supply_price }}"
+                      data-connector-price="{{ cctv_pricing.connector_price }}"
+                      data-cable-price="{{ cctv_pricing.cable_price_per_meter }}"
+                      data-installation-charge="{{ cctv_pricing.installation_charge }}"
+                      data-wiring-charge="{{ cctv_pricing.wiring_charge_per_meter }}"
+                      data-config-charge="{{ cctv_pricing.configuration_charge }}"
+                      data-maintenance-charge="{{ cctv_pricing.maintenance_charge }}">
+
+                    <!-- Number of Cameras -->
+                    <div class="mb-4">
+                        <label class="form-label text-white fw-bold d-flex justify-content-between">
+                            <span>Number of Cameras</span>
+                            <span class="text-cyan" id="camCountLabel">4 Cameras</span>
+                        </label>
+                        <input type="range" class="form-range" id="calcCameras" min="1" max="32" value="4" oninput="document.getElementById('camCountLabel').innerText = this.value + ' Cameras';">
+                    </div>
+
+                    <!-- Cable Length -->
+                    <div class="mb-4">
+                        <label class="form-label text-white fw-bold d-flex justify-content-between">
+                            <span>Estimated Cable Length (Meters)</span>
+                            <span class="text-cyan" id="cableLabel">100 Meters</span>
+                        </label>
+                        <input type="range" class="form-range" id="calcCable" min="20" max="500" step="10" value="100" oninput="document.getElementById('cableLabel').innerText = this.value + ' Meters';">
+                    </div>
+
+                    <!-- Options -->
+                    <div class="form-check form-switch mb-4">
+                        <input class="form-check-input" type="checkbox" id="calcMaintenance" checked>
+                        <label class="form-check-label text-muted small" for="calcMaintenance">
+                            Include Annual Maintenance (AMC) & Technical Support
+                        </label>
+                    </div>
+
+                    <div class="alert alert-dark border-secondary small text-muted">
+                        <i class="bi bi-info-circle me-1 text-cyan"></i> Unit rates are dynamically synced with our MySQL database (`CCTVPricing`).
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- BREAKDOWN & QUOTE REQUEST -->
+        <div class="col-lg-6">
+            <div class="glass-card p-4 p-md-5 border-cyan">
+                <h4 class="text-white fw-bold mb-4"><i class="bi bi-receipt text-cyan me-2"></i> Estimated Cost Breakdown</h4>
+
+                <div class="table-responsive mb-4">
+                    <table class="table table-dark table-borderless small mb-0">
+                        <tbody>
+                            <tr>
+                                <td class="text-muted">Cameras Cost:</td>
+                                <td class="text-end fw-bold text-white" id="resCameraCost">₹0</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">DVR / NVR Device:</td>
+                                <td class="text-end fw-bold text-white" id="resDvrCost">₹0</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Surveillance Storage HDD:</td>
+                                <td class="text-end fw-bold text-white" id="resHddCost">₹0</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Power Supply & Connectors:</td>
+                                <td class="text-end fw-bold text-white" id="resPowerCost">₹0</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Cable Supply:</td>
+                                <td class="text-end fw-bold text-white" id="resCableCost">₹0</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Installation, Wiring & Network Setup:</td>
+                                <td class="text-end fw-bold text-white" id="resInstallCost">₹0</td>
+                            </tr>
+                            <tr class="border-top border-secondary">
+                                <td class="fs-5 text-cyan fw-bold pt-3">TOTAL ESTIMATE:</td>
+                                <td class="text-end fs-4 fw-bold text-cyan pt-3" id="resGrandTotal">₹0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="border-secondary mb-4">
+
+                <!-- REQUEST DETAILED QUOTE FORM -->
+                <h5 class="text-white fw-bold mb-3">Request Official Detailed Quote</h5>
+                <form method="post" action="{% url 'services:cctv_calculator' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.source }}
+                    {{ form.calculation_details }}
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Your Name *</label>
+                            {{ form.customer_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Mobile Number *</label>
+                            {{ form.phone }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Installation Location / Address</label>
+                        {{ form.location }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Additional Requirements / Notes</label>
+                        {{ form.message }}
+                    </div>
+                    <button type="submit" class="btn btn-cyan w-100 btn-lg">
+                        Submit Request for On-Site Survey & Quote <i class="bi bi-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- CCTV PRESET PACKAGES -->
+    {% if cctv_packages.exists %}
+    <div class="mt-5">
+        <div class="text-center mb-5">
+            <span class="text-cyan small fw-bold text-uppercase">Popular Setup Kits</span>
+            <h2 class="fw-bold text-white">Pre-Configured CCTV Packages</h2>
+        </div>
+
+        <div class="row g-4">
+            {% for pkg in cctv_packages %}
+            <div class="col-md-6">
+                <div class="glass-card p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-white fw-bold mb-0">{{ pkg.name }}</h4>
+                        <span class="price-tag">₹{{ pkg.package_price|floatformat:2 }}</span>
+                    </div>
+                    <p class="text-muted small mb-3">{{ pkg.description }}</p>
+
+                    <div class="row g-2 small text-muted mb-3">
+                        <div class="col-6"><i class="bi bi-camera-video text-cyan me-1"></i> {{ pkg.camera_count }} Cameras ({{ pkg.camera_type }})</div>
+                        <div class="col-6"><i class="bi bi-hdd text-cyan me-1"></i> {{ pkg.storage }}</div>
+                        <div class="col-6"><i class="bi bi-box me-1 text-cyan"></i> {{ pkg.dvr_nvr }}</div>
+                        <div class="col-6"><i class="bi bi-bounding-box-circles text-cyan me-1"></i> {{ pkg.cable_meters }}m Wiring Included</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

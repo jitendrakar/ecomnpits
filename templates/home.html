@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ site_settings.default_meta_title }}{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="hero-section text-center text-lg-start">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill glass-card mb-3 text-cyan small border-cyan">
+                    <i class="bi bi-cpu"></i> <span>Nehru Place IT Services Premier Hub</span>
+                </div>
+                <!-- HERO CAROUSEL SLIDER TILE -->
+                <div id="heroCarousel" class="carousel slide carousel-fade mb-3" data-bs-ride="carousel" data-bs-interval="5000">
+                    <!-- Carousel Indicators -->
+                    <div class="carousel-indicators justify-content-start ms-0 mb-3" style="position: relative; margin-top: 15px;">
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    </div>
+
+                    <div class="carousel-inner">
+                        <!-- SLIDE 1: IT SOLUTIONS & PRODUCTS -->
+                        <div class="carousel-item active">
+                            <h1 class="hero-title">
+                                <span class="text-gradient">SMART IT SOLUTIONS</span><br>
+                                FOR MODERN BUSINESS
+                            </h1>
+                            <p class="hero-subtitle">
+                                Authorized IT Products, Custom Web Development, HD CCTV Security Deployment, High-Speed Networking & Certified Hardware Repair.
+                            </p>
+                            <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start hero-btn-group">
+                                <a href="{% url 'products:product_list' %}" class="btn btn-cyan">
+                                    <i class="bi bi-box-seam me-1"></i> Explore Products
+                                </a>
+                                <a href="{% url 'services:service_list' %}" class="btn btn-outline-cyan">
+                                    <i class="bi bi-tools me-1"></i> IT Services
+                                </a>
+                                <a href="{% url 'core:contact' %}" class="btn btn-outline-cyan border-purple text-purple">
+                                    <i class="bi bi-chat-quote-fill me-1"></i> Get Quote
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- SLIDE 2: MARKETPLACE SUPPORT & WARRANTY HELP -->
+                        <div class="carousel-item">
+                            <h1 class="hero-title">
+                                <span class="text-gradient">Bought our products</span><br>
+                                from Amazon, Flipkart, Meesho
+                            </h1>
+                            <p class="hero-subtitle">
+                                or any other e-commerce platform? Get product support, warranty assistance and technical help from our team.
+                            </p>
+                            <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start hero-btn-group">
+                                <a href="{% url 'core:contact' %}" class="btn btn-cyan">
+                                    <i class="bi bi-headset me-1"></i> Get Product Support & Warranty
+                                </a>
+                                <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20bought%20a%20product%20from%20Amazon/Flipkart/Meesho%20and%20need%20support." target="_blank" class="btn btn-outline-cyan">
+                                    <i class="bi bi-whatsapp me-1"></i> WhatsApp Support
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="glass-card p-4 text-center position-relative">
+                    <div class="position-absolute top-0 start-50 translate-middle badge bg-primary px-3 py-2">NEHRU PLACE IT HUB</div>
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" alt="IT Services" class="img-fluid rounded-3 mb-3 border border-secondary">
+                    <h5 class="text-white fw-bold mb-1">Instant Tech Assistance</h5>
+                    <p class="text-muted small mb-3">Looking for urgent hardware repair, custom PC builds, or CCTV quotes?</p>
+                    <a href="tel:{{ site_settings.phone }}" class="btn btn-sm btn-cyan w-100 mb-2">
+                        <i class="bi bi-telephone-fill me-1"></i> Call {{ site_settings.phone }}
+                    </a>
+                    <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20need%20urgent%20IT%20support." target="_blank" class="btn btn-sm btn-outline-cyan w-100">
+                        <i class="bi bi-whatsapp me-1"></i> WhatsApp Inquiry
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURED PRODUCTS SECTION -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+            <div>
+                <span class="text-cyan small fw-bold text-uppercase tracking-wider">Catalog</span>
+                <h2 class="fw-bold text-white mb-0">Featured IT Products</h2>
+            </div>
+            <a href="{% url 'products:product_list' %}" class="btn btn-outline-cyan mt-3 mt-md-0">
+                View All Products <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-lg-4 col-md-6">
+                <div class="glass-card product-card p-3">
+                    <div class="product-img-wrapper">
+                        {% if product.primary_image %}
+                            <img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="product-img">
+                        {% else %}
+                            <i class="bi bi-laptop fs-1 text-muted"></i>
+                        {% endif %}
+                        <span class="badge-stock {% if product.stock_status == 'IN_STOCK' %}badge-in-stock{% else %}badge-out-stock{% endif %}">
+                            {{ product.get_stock_status_display }}
+                        </span>
+                    </div>
+
+                    <div class="p-3 d-flex flex-column flex-grow-1">
+                        <div class="d-flex justify-content-between text-muted small mb-1">
+                            <span>{{ product.category.name }}</span>
+                            {% if product.brand %}<span class="fw-bold text-cyan">{{ product.brand.name }}</span>{% endif %}
+                        </div>
+
+                        <h5 class="text-white fw-bold mb-2">
+                            <a href="{% url 'products:product_detail' product.slug %}" class="text-white">{{ product.name|truncatechars:55 }}</a>
+                        </h5>
+
+                        <p class="text-muted small mb-3 flex-grow-1">{{ product.short_description|truncatechars:90 }}</p>
+
+                        <div class="d-flex align-items-baseline mb-3">
+                            <span class="price-tag">₹{{ product.current_price|floatformat:2 }}</span>
+                            {% if product.discount_price and product.discount_price < product.price %}
+                                <span class="old-price">₹{{ product.price|floatformat:2 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- External Marketplace Links -->
+                        <div class="mb-3">
+                            <div class="small text-muted mb-1">Buy External:</div>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for link in product.marketplace_links.all %}
+                                    {% if link.is_active and link.marketplace.is_active %}
+                                        <a href="{% url 'products:marketplace_redirect' link.id %}" target="_blank" class="marketplace-badge mp-{{ link.marketplace.slug }}">
+                                            {{ link.marketplace.name }}
+                                        </a>
+                                    {% endif %}
+                                {% empty %}
+                                    <span class="small text-muted">Contact store for orders</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <a href="{% url 'products:product_detail' product.slug %}" class="btn btn-sm btn-outline-cyan w-100 mt-auto">
+                            View Specifications & Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-muted py-4">No featured products available at the moment.</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES SECTION -->
+<section class="py-5 bg-secondary-dark">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-cyan small fw-bold text-uppercase">Professional IT Services</span>
+            <h2 class="fw-bold text-white">Comprehensive Technology Solutions</h2>
+            <p class="text-muted">End-to-end IT services managed by certified engineers and web developers in Nehru Place.</p>
+        </div>
+
+        <div class="row g-4">
+            {% for service in featured_services %}
+            <div class="col-lg-4 col-md-6">
+                <div class="glass-card p-4 h-100 d-flex flex-column">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="bg-dark p-3 rounded-3 text-cyan fs-3 border border-secondary">
+                            <i class="bi {{ service.category.icon }}"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small d-block">{{ service.category.name }}</span>
+                            <h5 class="text-white fw-bold mb-0">{{ service.name }}</h5>
+                        </div>
+                    </div>
+
+                    <p class="text-muted small mb-3 flex-grow-1">{{ service.short_description }}</p>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3 pt-2 border-top border-secondary opacity-75">
+                        <span class="text-muted small">Starting Price</span>
+                        <span class="fw-bold text-cyan">₹{{ service.starting_price|default:"1,500" }} <small class="text-muted fs-7">/ {{ service.price_unit }}</small></span>
+                    </div>
+
+                    <a href="{% url 'services:service_detail' service.slug %}" class="btn btn-sm btn-cyan w-100 mt-auto">
+                        Explore Service Packages <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CCTV CALCULATOR QUICK SECTION -->
+<section class="py-5">
+    <div class="container">
+        <div class="glass-card p-4 p-md-5">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-6">
+                    <span class="badge bg-info text-dark mb-2">Interactive Pricing Tool</span>
+                    <h2 class="fw-bold text-white mb-3">Service and Support Calculator</h2>
+                    <p class="text-muted mb-4">
+                        Calculate estimated IT service, support, maintenance & CCTV installation costs based on live camera unit prices, DVR/NVR storage, wiring length, and labor charges stored directly in our database.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'services:cctv_calculator' %}" class="btn btn-cyan">
+                            Open Service & Support Calculator <i class="bi bi-calculator"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="calc-summary">
+                        <h6 class="text-white fw-bold mb-3"><i class="bi bi-shield-check text-cyan me-2"></i> Standard CCTV Rates (Managed via Admin)</h6>
+                        <div class="row g-2 small text-muted">
+                            <div class="col-6">Camera Unit: <span class="text-white fw-bold">₹{{ cctv_pricing.camera_price }}</span></div>
+                            <div class="col-6">DVR/NVR Device: <span class="text-white fw-bold">₹{{ cctv_pricing.dvr_nvr_price }}</span></div>
+                            <div class="col-6">1TB HDD: <span class="text-white fw-bold">₹{{ cctv_pricing.hdd_price }}</span></div>
+                            <div class="col-6">Cable Cost/Meter: <span class="text-white fw-bold">₹{{ cctv_pricing.cable_price_per_meter }}</span></div>
+                            <div class="col-6">Wiring/Meter: <span class="text-white fw-bold">₹{{ cctv_pricing.wiring_charge_per_meter }}</span></div>
+                            <div class="col-6">Installation Charge: <span class="text-white fw-bold">₹{{ cctv_pricing.installation_charge }}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS SECTION -->
+{% if testimonials %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-cyan small fw-bold text-uppercase">Client Reviews</span>
+            <h2 class="fw-bold text-white">What Our Customers Say</h2>
+        </div>
+
+        <div class="row g-4">
+            {% for t in testimonials %}
+            <div class="col-md-6">
+                <div class="glass-card p-4 h-100">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="bg-cyan-soft text-cyan rounded-circle p-2 fs-4">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-white fw-bold mb-0">{{ t.customer_name }}</h6>
+                            <small class="text-muted">{{ t.designation }} {% if t.company %}at {{ t.company }}{% endif %}</small>
+                        </div>
+                        <div class="ms-auto text-warning fs-6">
+                            {% for i in "12345" %}★{% endfor %}
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">"{{ t.review }}"</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us | {{ site_settings.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row align-items-center g-5 mb-5">
+        <div class="col-lg-6">
+            <span class="text-cyan small fw-bold text-uppercase">Who We Are</span>
+            <h1 class="fw-bold text-white mb-3">Nehru Place IT Services</h1>
+            <p class="text-muted fs-5 mb-4">
+                Empowering businesses across Delhi NCR and India with reliable IT hardware, custom web application engineering, HD CCTV security deployment, and enterprise networking.
+            </p>
+            <div class="glass-card p-4">
+                <p class="text-muted mb-0">{{ site_settings.about_text }}</p>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="glass-card p-4 text-center">
+                <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80" alt="About Nehru Place IT" class="img-fluid rounded-3 border border-secondary mb-3">
+                <div class="row g-2 text-center">
+                    <div class="col-4">
+                        <div class="p-2 border border-secondary rounded-2">
+                            <span class="fs-4 fw-bold text-cyan">10+</span>
+                            <small class="text-muted d-block fs-7">Years Hub Exp</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-2 border border-secondary rounded-2">
+                            <span class="fs-4 fw-bold text-cyan">5,000+</span>
+                            <small class="text-muted d-block fs-7">Clients Served</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-2 border border-secondary rounded-2">
+                            <span class="fs-4 fw-bold text-cyan">100%</span>
+                            <small class="text-muted d-block fs-7">Genuine Support</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if about_page %}
+    <div class="glass-card p-4 p-md-5 mb-5">
+        <div class="text-muted">{{ about_page.content|safe }}</div>
+    </div>
+    {% endif %}
+
+    <!-- OUR APPROACH / WHY CHOOSE US -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="glass-card p-4 h-100">
+                <i class="bi bi-shield-check display-5 text-cyan mb-3"></i>
+                <h5 class="text-white fw-bold mb-2">Quality & Warranty</h5>
+                <p class="text-muted small">All IT products are backed by official brand warranties. Services include transparent SLAs.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card p-4 h-100">
+                <i class="bi bi-cash-stack display-5 text-cyan mb-3"></i>
+                <h5 class="text-white fw-bold mb-2">Transparent Pricing</h5>
+                <p class="text-muted small">No hidden fees. Rates for CCTV, web packages, and hardware repair are database-managed.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card p-4 h-100">
+                <i class="bi bi-headset display-5 text-cyan mb-3"></i>
+                <h5 class="text-white fw-bold mb-2">Fast On-Site Support</h5>
+                <p class="text-muted small">Our technical staff in Nehru Place provides rapid response for installation & repair.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

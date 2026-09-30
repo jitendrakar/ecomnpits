@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: ecomnpits_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-ecom_npits}
+      MYSQL_USER: ${DB_USER:-ecom_npits}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-ecom_npits_pass123}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_secure_password_123}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "127.0.0.1:33066:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    container_name: ecomnpits_web
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - GUNICORN_BIND=0.0.0.0:8000
+      - GUNICORN_ACCESS_LOG=-
+      - GUNICORN_ERROR_LOG=-
+    ports:
+      # Map container port 8000 to internal host loopback port 8002 (so existing host Nginx can proxy to it)
+      - "127.0.0.1:8002:8000"
+    volumes:
+      - static_volume:/app/static_collected
+      - media_volume:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      bash -c "python manage.py migrate --noinput &&
+               python manage.py collectstatic --noinput &&
+               python manage.py seed_data &&
+               gunicorn --config gunicorn.conf.py config.wsgi:application"
+
+volumes:
+  mysql_data:
+  static_volume:
+  media_volume:

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page.title }} | {{ site_settings.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="glass-card p-4 p-md-5">
+        <h1 class="fw-bold text-white mb-4 border-bottom border-secondary pb-3">{{ page.title }}</h1>
+        <div class="text-muted leading-relaxed">{{ page.content|safe }}</div>
+    </div>
+</div>
+{% endblock %}
