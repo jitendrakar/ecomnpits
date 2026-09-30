@@ -339,25 +339,28 @@ a:hover {
 
 .product-img-wrapper {
     position: relative;
-    height: 220px;
+    height: 230px;
     overflow: hidden;
     border-radius: 12px 12px 0 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    padding: 8px;
 }
 
 .product-img {
-    max-height: 180px;
-    max-width: 90%;
+    max-height: 214px;
+    max-width: 98%;
+    width: auto;
+    height: auto;
     object-fit: contain;
     transition: transform 0.4s ease;
 }
 
 .product-card:hover .product-img {
-    transform: scale(1.07);
+    transform: scale(1.06);
 }
 
 .badge-stock {
@@ -517,7 +520,7 @@ a:hover {
 }
 
 [data-theme="light"] .product-img-wrapper {
-    background: #F1F5F9;
+    background: #FFFFFF;
 }
 
 [data-theme="light"] .footer-custom {
