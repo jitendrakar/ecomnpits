@@ -39,33 +39,10 @@
                     <span class="small theme-text-label">Dark</span>
                 </button>
 
-                <!-- Get Quote Dropdown -->
-                <div class="dropdown">
-                    <button class="btn btn-sm btn-cyan dropdown-toggle d-flex align-items-center gap-1 rounded-pill px-3" type="button" id="getQuoteDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        Get Quote <i class="bi bi-chevron-down ms-1 small"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end glass-card p-2 border-cyan shadow-lg" aria-labelledby="getQuoteDropdown">
-                        <li>
-                            <a class="dropdown-item rounded-2 py-2 px-3 text-cyan fw-bold d-flex align-items-center gap-2" href="{% url 'services:cctv_calculator' %}">
-                                <i class="bi bi-calculator-fill fs-5"></i>
-                                <div>
-                                    <div>Service & Support Calculator</div>
-                                    <small class="text-muted d-block fw-normal" style="font-size: 0.72rem;">Live IT Service & CCTV Quotation</small>
-                                </div>
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider opacity-25"></li>
-                        <li>
-                            <a class="dropdown-item rounded-2 py-2 px-3 text-white fw-semibold d-flex align-items-center gap-2" href="{% url 'core:contact' %}">
-                                <i class="bi bi-file-earmark-text-fill fs-5 text-cyan"></i>
-                                <div>
-                                    <div>Request Custom Quote</div>
-                                    <small class="text-muted d-block fw-normal" style="font-size: 0.72rem;">IT Products & Service Support</small>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                <!-- Get Quote Direct Button -->
+                <a href="{% url 'core:contact' %}" class="btn btn-sm btn-cyan d-flex align-items-center gap-1 rounded-pill px-3 fw-bold">
+                    <i class="bi bi-chat-quote-fill me-1"></i> Get Quote
+                </a>
             </div>
         </div>
     </div>
