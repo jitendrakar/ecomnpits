@@ -44,6 +44,21 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('price', 'discount_price', 'stock_status', 'featured', 'is_active')
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline, ProductSpecificationInline, ProductMarketplaceLinkInline]
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'slug', 'category', 'brand', 'sku', 'stock_status', 'featured', 'is_active')
+        }),
+        ('Pricing & Warranty', {
+            'fields': ('price', 'discount_price', 'warranty_period', 'warranty_type', 'warranty_details', 'warranty_terms')
+        }),
+        ('Descriptions & Media', {
+            'fields': ('short_description', 'description', 'video_url')
+        }),
+        ('SEO Metadata', {
+            'fields': ('seo_title', 'seo_description'),
+            'classes': ('collapse',)
+        }),
+    )
 
 
 @admin.register(Marketplace)
