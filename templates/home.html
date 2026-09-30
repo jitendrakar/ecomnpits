@@ -21,8 +21,27 @@
                     </div>
 
                     <div class="carousel-inner">
-                        <!-- SLIDE 1: IT SOLUTIONS & PRODUCTS -->
+                        <!-- SLIDE 1: MARKETPLACE SUPPORT & WARRANTY HELP -->
                         <div class="carousel-item active">
+                            <h1 class="hero-title">
+                                <span class="text-gradient">BOUGHT OUR PRODUCTS</span><br>
+                                FROM AMAZON, FLIPKART, MEESHO
+                            </h1>
+                            <p class="hero-subtitle">
+                                or any other e-commerce platform? Get product support, warranty assistance and technical help from our team.
+                            </p>
+                            <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start hero-btn-group">
+                                <a href="{% url 'core:contact' %}" class="btn btn-cyan">
+                                    <i class="bi bi-headset me-1"></i> Get Product Support & Warranty
+                                </a>
+                                <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20bought%20a%20product%20from%20Amazon/Flipkart/Meesho%20and%20need%20support." target="_blank" class="btn btn-outline-cyan">
+                                    <i class="bi bi-whatsapp me-1"></i> WhatsApp Support
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- SLIDE 2: IT SOLUTIONS & PRODUCTS -->
+                        <div class="carousel-item">
                             <h1 class="hero-title">
                                 <span class="text-gradient">SMART IT SOLUTIONS</span><br>
                                 FOR MODERN BUSINESS
@@ -38,26 +57,7 @@
                                     <i class="bi bi-tools me-1"></i> IT Services
                                 </a>
                                 <a href="{% url 'core:contact' %}" class="btn btn-outline-cyan border-purple text-purple">
-                                    <i class="bi bi-chat-quote-fill me-1"></i> Get Quote
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- SLIDE 2: MARKETPLACE SUPPORT & WARRANTY HELP -->
-                        <div class="carousel-item">
-                            <h1 class="hero-title">
-                                <span class="text-gradient">BOUGHT OUR PRODUCTS</span><br>
-                                FROM AMAZON, FLIPKART, MEESHO
-                            </h1>
-                            <p class="hero-subtitle">
-                                or any other e-commerce platform? Get product support, warranty assistance and technical help from our team.
-                            </p>
-                            <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start hero-btn-group">
-                                <a href="{% url 'core:contact' %}" class="btn btn-cyan">
-                                    <i class="bi bi-headset me-1"></i> Get Product Support & Warranty
-                                </a>
-                                <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20bought%20a%20product%20from%20Amazon/Flipkart/Meesho%20and%20need%20support." target="_blank" class="btn btn-outline-cyan">
-                                    <i class="bi bi-whatsapp me-1"></i> WhatsApp Support
+                                    <i class="bi bi-chat-quote-fill me-1"></i> Quote
                                 </a>
                             </div>
                         </div>
