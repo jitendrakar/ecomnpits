@@ -28,21 +28,21 @@
 
             <div class="d-flex align-items-center gap-2">
                 <!-- Compact Phone Call Button -->
-                <a href="tel:{{ site_settings.phone }}" class="btn btn-sm btn-outline-cyan rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; flex-shrink: 0;" title="Call Us: {{ site_settings.phone }}">
+                <a href="tel:{{ site_settings.phone }}" class="btn btn-outline-cyan rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; flex-shrink: 0;" title="Call Us: {{ site_settings.phone }}">
                     <i class="bi bi-telephone-fill"></i>
                 </a>
 
-                <!-- Get Quote Direct Button -->
-                <a href="{% url 'core:contact' %}" class="btn btn-sm btn-cyan d-flex align-items-center gap-1 rounded-pill px-3 fw-bold">
-                    <i class="bi bi-chat-quote-fill me-1"></i> Get Quote
-                </a>
-
                 <!-- Theme Toggle Button -->
-                <button id="themeToggleBtn" class="btn btn-sm btn-outline-cyan d-flex align-items-center gap-1 rounded-pill px-3" type="button" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+                <button id="themeToggleBtn" class="btn btn-outline-cyan d-flex align-items-center justify-content-center gap-1 rounded-pill px-3" style="height: 40px;" type="button" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
                     <i class="bi bi-moon-stars-fill theme-icon-dark"></i>
                     <i class="bi bi-sun-fill theme-icon-light d-none"></i>
                     <span class="small theme-text-label">Light</span>
                 </button>
+
+                <!-- Get Quote Direct Button (Aligned with Logo Circle Height) -->
+                <a href="{% url 'core:contact' %}" class="btn btn-cyan d-flex align-items-center justify-content-center gap-1 rounded-pill px-3 fw-bold shadow-sm text-nowrap" style="height: 40px;" title="Request Custom Quote">
+                    <i class="bi bi-chat-quote-fill me-1"></i> Get Quote
+                </a>
             </div>
         </div>
     </div>
