@@ -101,11 +101,13 @@
             <div class="col-lg-4 col-md-6">
                 <div class="glass-card product-card p-3">
                     <div class="product-img-wrapper">
-                        {% if product.primary_image %}
-                            <img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="product-img">
-                        {% else %}
-                            <i class="bi bi-laptop fs-1 text-muted"></i>
-                        {% endif %}
+                        <a href="{% url 'products:product_detail' product.slug %}" class="d-flex align-items-center justify-content-center w-100 h-100 text-decoration-none">
+                            {% if product.primary_image %}
+                                <img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="product-img">
+                            {% else %}
+                                <i class="bi bi-laptop fs-1 text-muted"></i>
+                            {% endif %}
+                        </a>
                         <span class="badge-stock {% if product.stock_status == 'IN_STOCK' %}badge-in-stock{% else %}badge-out-stock{% endif %}">
                             {{ product.get_stock_status_display }}
                         </span>
