@@ -69,6 +69,7 @@ class Product(models.Model):
     warranty_terms = models.TextField(blank=True, default="")
     featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True, db_index=True)
+    video_url = models.URLField(max_length=500, blank=True, default="", help_text="YouTube video link for product tutorial/demo")
     seo_title = models.CharField(max_length=255, blank=True, default="")
     seo_description = models.TextField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -101,6 +102,21 @@ class Product(models.Model):
         if primary:
             return primary
         return self.images.first()
+
+    @property
+    def youtube_embed_url(self):
+        if not self.video_url:
+            return ""
+        url = self.video_url.strip()
+        if "youtube.com/embed/" in url:
+            return url
+        if "youtube.com/watch?v=" in url:
+            video_id = url.split("watch?v=")[-1].split("&")[0]
+            return f"https://www.youtube.com/embed/{video_id}"
+        if "youtu.be/" in url:
+            video_id = url.split("youtu.be/")[-1].split("?")[0]
+            return f"https://www.youtube.com/embed/{video_id}"
+        return url
 
 
 class ProductImage(models.Model):
