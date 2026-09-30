@@ -27,21 +27,21 @@
             </ul>
 
             <div class="d-flex align-items-center gap-2">
-                <!-- Compact Phone Call Button -->
-                <a href="tel:{{ site_settings.phone }}" class="btn btn-outline-cyan rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; flex-shrink: 0;" title="Call Us: {{ site_settings.phone }}">
-                    <i class="bi bi-telephone-fill"></i>
+                <!-- Compact Phone Call Button (45px Round Circle) -->
+                <a href="tel:{{ site_settings.phone }}" class="btn btn-outline-cyan rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px; flex-shrink: 0;" title="Call Us: {{ site_settings.phone }}">
+                    <i class="bi bi-telephone-fill fs-6"></i>
                 </a>
 
-                <!-- Theme Toggle Button -->
-                <button id="themeToggleBtn" class="btn btn-outline-cyan d-flex align-items-center justify-content-center gap-1 rounded-pill px-3" style="height: 40px;" type="button" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+                <!-- Theme Toggle Button (45px Height Round Pill) -->
+                <button id="themeToggleBtn" class="btn btn-outline-cyan d-flex align-items-center justify-content-center gap-1 rounded-pill px-3 shadow-sm" style="height: 45px;" type="button" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
                     <i class="bi bi-moon-stars-fill theme-icon-dark"></i>
                     <i class="bi bi-sun-fill theme-icon-light d-none"></i>
                     <span class="small theme-text-label">Light</span>
                 </button>
 
-                <!-- Get Quote Direct Button (Aligned with Logo Circle Height) -->
-                <a href="{% url 'core:contact' %}" class="btn btn-cyan d-flex align-items-center justify-content-center gap-1 rounded-pill px-3 fw-bold shadow-sm text-nowrap" style="height: 40px;" title="Request Custom Quote">
-                    <i class="bi bi-chat-quote-fill me-1"></i> Get Quote
+                <!-- Get Quote Direct Button (45px Height Aligned with Logo Circle) -->
+                <a href="{% url 'core:contact' %}" class="btn btn-cyan d-flex align-items-center justify-content-center gap-1 rounded-pill px-3.5 fw-bold shadow-sm text-nowrap" style="height: 45px; border-radius: 50px;" title="Request Custom Quote">
+                    <i class="bi bi-chat-quote-fill me-1 fs-6"></i> Get Quote
                 </a>
             </div>
         </div>
