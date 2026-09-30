@@ -30,14 +30,14 @@ function initThemeToggle() {
         }
     }
 
-    const currentTheme = localStorage.getItem('theme') || 'dark';
+    const currentTheme = localStorage.getItem('theme') || 'light';
     applyTheme(currentTheme);
 
     const toggleBtn = document.getElementById('themeToggleBtn');
     if (toggleBtn) {
         toggleBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            const activeTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const activeTheme = document.documentElement.getAttribute('data-theme') || 'light';
             const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
             applyTheme(newTheme);
         });

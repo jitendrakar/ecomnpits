@@ -2,32 +2,7 @@
    NEHRU PLACE IT SERVICES - MODERN AI/IT DESIGN SYSTEM
    ========================================================================== */
 
-:root, [data-theme="dark"] {
-    --bg-dark: #050B14;
-    --bg-secondary: #0B1424;
-    --bg-card: #101C2E;
-    --bg-card-hover: #16263F;
-    --border-color: rgba(0, 229, 255, 0.15);
-    --border-color-glow: rgba(0, 229, 255, 0.4);
-    
-    --primary-blue: #00A8FF;
-    --cyan-glow: #00E5FF;
-    --purple-glow: #7C3AED;
-    
-    --text-main: #F8FAFC;
-    --text-muted: #94A3B8;
-    --text-dim: #64748B;
-    
-    --gradient-primary: linear-gradient(135deg, #00A8FF 0%, #00E5FF 100%);
-    --gradient-purple: linear-gradient(135deg, #00A8FF 0%, #7C3AED 100%);
-    --gradient-dark: linear-gradient(180deg, #050B14 0%, #0B1424 100%);
-    --glass-bg: rgba(16, 28, 46, 0.7);
-    --navbar-bg: rgba(5, 11, 20, 0.92);
-    --footer-bg: #02060D;
-    --input-bg: rgba(5, 11, 20, 0.8);
-}
-
-[data-theme="light"] {
+:root, [data-theme="light"] {
     --bg-dark: #F8FAFC;
     --bg-secondary: #F1F5F9;
     --bg-card: #FFFFFF;
@@ -50,6 +25,31 @@
     --navbar-bg: rgba(255, 255, 255, 0.96);
     --footer-bg: #F1F5F9;
     --input-bg: #FFFFFF;
+}
+
+[data-theme="dark"] {
+    --bg-dark: #050B14;
+    --bg-secondary: #0B1424;
+    --bg-card: #101C2E;
+    --bg-card-hover: #16263F;
+    --border-color: rgba(0, 229, 255, 0.15);
+    --border-color-glow: rgba(0, 229, 255, 0.4);
+    
+    --primary-blue: #00A8FF;
+    --cyan-glow: #00E5FF;
+    --purple-glow: #7C3AED;
+    
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --text-dim: #64748B;
+    
+    --gradient-primary: linear-gradient(135deg, #00A8FF 0%, #00E5FF 100%);
+    --gradient-purple: linear-gradient(135deg, #00A8FF 0%, #7C3AED 100%);
+    --gradient-dark: linear-gradient(180deg, #050B14 0%, #0B1424 100%);
+    --glass-bg: rgba(16, 28, 46, 0.7);
+    --navbar-bg: rgba(5, 11, 20, 0.92);
+    --footer-bg: #02060D;
+    --input-bg: rgba(5, 11, 20, 0.8);
 }
 
 body {
