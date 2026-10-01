@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import SiteSettings, Testimonial, Page
+from .models import SiteSettings, Testimonial, Page, NewsletterSubscriber
 from products.models import Product, ProductCategory, Brand
 from services.models import Service, ServiceCategory, CCTVPricing
 from enquiries.forms import EnquiryForm
@@ -102,6 +102,8 @@ def submit_review_view(request):
         company = request.POST.get('company', '').strip()
         rating = request.POST.get('rating', '5')
         review = request.POST.get('review', '').strip()
+        email = request.POST.get('email', '').strip()
+        subscribe_updates = request.POST.get('subscribe_updates')
 
         if customer_name and review:
             try:
@@ -120,9 +122,36 @@ def submit_review_view(request):
                 is_featured=True,
                 is_active=True,
             )
+
+            if subscribe_updates and email:
+                NewsletterSubscriber.objects.get_or_create(
+                    email=email,
+                    defaults={'name': customer_name, 'is_active': True}
+                )
+
             messages.success(request, "Thank you! Your review has been submitted and published successfully.")
         else:
             messages.error(request, "Please fill in your name and review before submitting.")
+
+    return redirect(request.META.get('HTTP_REFERER', 'core:home'))
+
+
+def subscribe_newsletter_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        name = request.POST.get('name', '').strip()
+
+        if email:
+            subscriber, created = NewsletterSubscriber.objects.get_or_create(
+                email=email,
+                defaults={'name': name, 'is_active': True}
+            )
+            if created:
+                messages.success(request, "Awesome! You are now subscribed to receive our latest product releases & stock updates.")
+            else:
+                messages.info(request, "You are already subscribed to receive our product updates!")
+        else:
+            messages.error(request, "Please enter a valid email address to subscribe.")
 
     return redirect(request.META.get('HTTP_REFERER', 'core:home'))
 

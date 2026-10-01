@@ -237,85 +237,127 @@
     </div>
 </section>
 
-<!-- REVIEWS & TESTIMONIALS SECTION WITH WRITE A REVIEW OPTION -->
+<!-- REVIEWS & PRODUCT UPDATES SUBSCRIPTION HUB -->
 <section class="py-5">
     <div class="container">
+        <!-- SECTION HEADER & WRITE REVIEW BUTTON -->
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
             <div class="text-center text-md-start mb-3 mb-md-0">
-                <span class="text-cyan small fw-bold text-uppercase tracking-wider">Client Reviews</span>
-                <h2 class="fw-bold text-white mb-0">What Our Customers Say</h2>
+                <span class="text-cyan small fw-bold text-uppercase tracking-wider"><i class="bi bi-star-fill text-warning me-1"></i> Customer Reviews & Product Updates</span>
+                <h2 class="fw-bold text-white mb-0">Client Feedback & Stock Alerts</h2>
             </div>
-            <!-- WRITE A REVIEW BUTTON AFTER SLIDE -->
-            <button type="button" class="btn btn-cyan rounded-pill px-4 py-2 fw-bold shadow-lg" data-bs-toggle="modal" data-bs-target="#writeReviewModal">
-                <i class="bi bi-pencil-square me-2"></i> Write a Review
-            </button>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-cyan rounded-pill px-4 py-2 fw-bold shadow-lg" data-bs-toggle="modal" data-bs-target="#writeReviewModal">
+                    <i class="bi bi-pencil-square me-2"></i> Write a Review
+                </button>
+            </div>
         </div>
 
-        {% if testimonials %}
-        <!-- REVIEWS SLIDER -->
-        <div id="reviewCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000" data-bs-touch="true">
-            <!-- Carousel Indicators -->
-            <div class="carousel-indicators justify-content-center mb-0 position-relative mt-4">
-                {% for t in testimonials %}
-                <button type="button" data-bs-target="#reviewCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
-                {% endfor %}
-            </div>
-
-            <div class="carousel-inner p-2">
-                {% for t in testimonials %}
-                <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                    <div class="glass-card p-4 p-md-5 mx-auto border-cyan" style="max-width: 800px;">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="bg-cyan-soft text-cyan rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                <i class="bi bi-person-fill"></i>
-                            </div>
-                            <div>
-                                <h5 class="text-white fw-bold mb-0">{{ t.customer_name }}</h5>
-                                <small class="text-muted">{{ t.designation }} {% if t.company %}at {{ t.company }}{% endif %}</small>
-                            </div>
-                            <div class="ms-auto text-warning fs-5">
-                                {% if t.rating == 5 %}★★★★★
-                                {% elif t.rating == 4 %}★★★★☆
-                                {% elif t.rating == 3 %}★★★☆☆
-                                {% elif t.rating == 2 %}★★☆☆☆
-                                {% else %}★☆☆☆☆{% endif %}
+        <div class="row g-4 align-items-stretch mb-4">
+            <!-- LEFT / MAIN COLUMN: REVIEWS SLIDER -->
+            <div class="col-lg-8">
+                {% if testimonials %}
+                <div id="reviewCarousel" class="carousel slide carousel-fade h-100 glass-card p-3 p-md-4 border-cyan d-flex flex-column justify-content-between" data-bs-ride="carousel" data-bs-interval="6000" data-bs-touch="true">
+                    <div class="carousel-inner p-2 my-auto">
+                        {% for t in testimonials %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <div class="p-2">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="bg-cyan-soft text-cyan rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="text-white fw-bold mb-0">{{ t.customer_name }}</h5>
+                                        <small class="text-muted">{{ t.designation }} {% if t.company %}at {{ t.company }}{% endif %}</small>
+                                    </div>
+                                    <div class="ms-auto text-warning fs-5">
+                                        {% if t.rating == 5 %}★★★★★
+                                        {% elif t.rating == 4 %}★★★★☆
+                                        {% elif t.rating == 3 %}★★★☆☆
+                                        {% elif t.rating == 2 %}★★☆☆☆
+                                        {% else %}★☆☆☆☆{% endif %}
+                                    </div>
+                                </div>
+                                <p class="text-white fs-5 leading-relaxed mb-0" style="font-style: italic;">"{{ t.review }}"</p>
                             </div>
                         </div>
-                        <p class="text-white fs-5 leading-relaxed mb-0" style="font-style: italic;">"{{ t.review }}"</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top border-secondary">
+                        <div class="carousel-indicators justify-content-start mb-0 position-relative m-0">
+                            {% for t in testimonials %}
+                            <button type="button" data-bs-target="#reviewCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-cyan rounded-circle" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev" title="Previous Review">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-cyan rounded-circle" type="button" data-bs-target="#reviewCarousel" data-bs-slide="next" title="Next Review">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                {% endfor %}
+                {% else %}
+                <div class="glass-card p-5 text-center h-100 d-flex flex-column align-items-center justify-content-center">
+                    <i class="bi bi-chat-left-quote display-4 text-cyan mb-3"></i>
+                    <h5 class="text-white">Be the first to leave a review!</h5>
+                    <p class="text-muted small mb-3">Share your feedback regarding our IT products, CCTV deployment, or hardware repair services.</p>
+                    <button type="button" class="btn btn-cyan rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#writeReviewModal">
+                        <i class="bi bi-pencil-square me-2"></i> Submit Your Review
+                    </button>
+                </div>
+                {% endif %}
             </div>
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon bg-dark rounded-circle p-3 border border-cyan opacity-75" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#reviewCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon bg-dark rounded-circle p-3 border border-cyan opacity-75" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+            <!-- RIGHT COLUMN: PRODUCT UPDATES & SUBSCRIPTION BOX -->
+            <div class="col-lg-4">
+                <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between border-cyan position-relative overflow-hidden">
+                    <div>
+                        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-cyan-soft text-cyan small fw-bold mb-3">
+                            <i class="bi bi-bell-fill"></i> Product Updates & Alerts
+                        </div>
+                        <h4 class="text-white fw-bold mb-2">Get Latest Product Offers</h4>
+                        <p class="text-muted small mb-4">
+                            Subscribe to receive instant updates on new IT hardware arrivals, price drops, and stock restocks.
+                        </p>
+
+                        <form action="{% url 'core:subscribe' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label text-white small fw-bold">Your Name (Optional)</label>
+                                <input type="text" name="name" class="form-control bg-dark border-secondary text-white" placeholder="Enter your name">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-white small fw-bold">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control bg-dark border-secondary text-white" placeholder="name@example.com" required>
+                            </div>
+                            <button type="submit" class="btn btn-cyan w-100 fw-bold py-2 rounded-pill shadow-sm">
+                                <i class="bi bi-envelope-check me-2"></i> Subscribe for Product Updates
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top border-secondary text-muted small d-flex align-items-center gap-2">
+                        <i class="bi bi-shield-lock text-cyan fs-5"></i>
+                        <span>No spam. Unsubscribe anytime with 1-click.</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% else %}
-        <div class="text-center p-5 glass-card">
-            <i class="bi bi-chat-left-quote display-4 text-cyan mb-3"></i>
-            <h5 class="text-white">Be the first to leave a review!</h5>
-            <p class="text-muted">Share your experience with Nehru Place IT Services products & tech support.</p>
-            <button type="button" class="btn btn-cyan rounded-pill px-4 mt-2" data-bs-toggle="modal" data-bs-target="#writeReviewModal">
-                <i class="bi bi-pencil-square me-2"></i> Submit Your Review
-            </button>
-        </div>
-        {% endif %}
     </div>
 </section>
 
-<!-- WRITE A REVIEW MODAL -->
+<!-- WRITE A REVIEW & SUBSCRIBE MODAL -->
 <div class="modal fade" id="writeReviewModal" tabindex="-1" aria-labelledby="writeReviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content glass-card border-cyan">
             <div class="modal-header border-secondary">
                 <h5 class="modal-title text-white fw-bold mb-0" id="writeReviewModalLabel">
-                    <i class="bi bi-star-fill text-warning me-2"></i> Write a Customer Review
+                    <i class="bi bi-star-fill text-warning me-2"></i> Write Review & Product Updates
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -333,6 +375,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label text-white fw-bold">Email Address (Optional for Product Updates)</label>
+                        <input type="email" name="email" class="form-control bg-dark border-secondary text-white" placeholder="e.g. rahul@example.com">
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label text-white fw-bold">Star Rating <span class="text-danger">*</span></label>
                         <select name="rating" class="form-select bg-dark border-secondary text-warning fw-bold">
                             <option value="5" selected>★★★★★ (5 Stars - Excellent)</option>
@@ -345,7 +392,14 @@
 
                     <div class="mb-3">
                         <label class="form-label text-white fw-bold">Your Review & Feedback <span class="text-danger">*</span></label>
-                        <textarea name="review" rows="4" class="form-control bg-dark border-secondary text-white" placeholder="Share your experience regarding our IT products, CCTV deployment, web development, or hardware repair services..." required></textarea>
+                        <textarea name="review" rows="3" class="form-control bg-dark border-secondary text-white" placeholder="Share your experience regarding our IT products, CCTV deployment, web development, or hardware repair services..." required></textarea>
+                    </div>
+
+                    <div class="form-check text-muted small">
+                        <input class="form-check-input" type="checkbox" name="subscribe_updates" value="1" id="subscribeCheck" checked>
+                        <label class="form-check-label text-white" for="subscribeCheck">
+                            Subscribe to receive new IT product releases, stock alerts & discount offers
+                        </label>
                     </div>
                 </div>
                 <div class="modal-footer border-secondary">

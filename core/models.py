@@ -75,3 +75,18 @@ class Page(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+
+class NewsletterSubscriber(models.Model):
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=100, blank=True, default="")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Product Update Subscriber"
+        verbose_name_plural = "Product Update Subscribers"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.email

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SiteSettings, Testimonial, Page
+from .models import SiteSettings, Testimonial, Page, NewsletterSubscriber
 
 
 @admin.register(SiteSettings)
@@ -29,3 +29,11 @@ class PageAdmin(admin.ModelAdmin):
     list_filter = ('is_published',)
     search_fields = ('title', 'content')
     prepopulated_fields = {'slug': ('title',)}
+
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = ('email', 'name', 'is_active', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('email', 'name')
+    list_editable = ('is_active',)

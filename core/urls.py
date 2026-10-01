@@ -8,6 +8,7 @@ urlpatterns = [
     path('about/', views.about_view, name='about'),
     path('contact/', views.contact_view, name='contact'),
     path('submit-review/', views.submit_review_view, name='submit_review'),
+    path('subscribe/', views.subscribe_newsletter_view, name='subscribe'),
     path('page/<slug:slug>/', views.page_detail_view, name='page_detail'),
     path('robots.txt', views.robots_view, name='robots'),
     path('sitemap.xml', views.sitemap_view, name='sitemap'),
