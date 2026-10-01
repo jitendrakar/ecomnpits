@@ -120,8 +120,26 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
+    VIEW_TYPE_CHOICES = [
+        ('FRONT', 'Front View'),
+        ('BACK', 'Back / Rear View'),
+        ('SIDE', 'Side View'),
+        ('TOP', 'Top / Bottom View'),
+        ('PORTS', 'Ports & Connectors'),
+        ('UNBOXING', 'Package / Unboxing'),
+        ('DIMENSION', 'Dimensions / Diagram'),
+        ('IN_USE', 'Installed / In-Use'),
+        ('OTHER', 'General Photo'),
+    ]
+
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to="products/")
+    view_type = models.CharField(
+        max_length=30,
+        choices=VIEW_TYPE_CHOICES,
+        default='FRONT',
+        help_text="Select photo view angle/type (e.g. Front View, Back View, Ports)"
+    )
     alt_text = models.CharField(max_length=255, blank=True, default="")
     sort_order = models.IntegerField(default=0)
     is_primary = models.BooleanField(default=False)
@@ -130,7 +148,7 @@ class ProductImage(models.Model):
         ordering = ['sort_order', 'id']
 
     def __str__(self):
-        return f"Image for {self.product.name}"
+        return f"{self.get_view_type_display()} for {self.product.name}"
 
 
 class ProductSpecification(models.Model):

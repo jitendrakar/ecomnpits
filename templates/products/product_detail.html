@@ -17,13 +17,17 @@
     </nav>
 
     <div class="row g-5">
-        <!-- PRODUCT IMAGES CAROUSEL (TOUCH SWIPEABLE & ZERO BOUNCE) -->
+        <!-- PRODUCT IMAGES CAROUSEL WITH ANGLE / VIEW BADGES -->
         <div class="col-lg-6">
-            <div id="productDetailCarousel" class="carousel slide carousel-fade border border-secondary rounded-3 overflow-hidden shadow-sm bg-white mb-3" data-bs-ride="false" data-bs-touch="true">
+            <div id="productDetailCarousel" class="carousel slide carousel-fade border border-secondary rounded-3 overflow-hidden shadow-sm bg-white mb-3 position-relative" data-bs-ride="false" data-bs-touch="true">
                 <div class="carousel-inner prod-gallery-inner">
                     {% if product.images.all %}
                         {% for img in product.images.all %}
-                        <div class="carousel-item {% if forloop.first %}active{% endif %} h-100">
+                        <div class="carousel-item {% if forloop.first %}active{% endif %} h-100 position-relative">
+                            <!-- View Angle Badge -->
+                            <span class="position-absolute top-0 start-0 m-3 badge bg-dark border border-cyan text-cyan shadow-sm px-3 py-2 opacity-90 z-3" style="font-size: 0.78rem;">
+                                <i class="bi bi-camera me-1"></i> {{ img.get_view_type_display }}
+                            </span>
                             <div class="d-flex align-items-center justify-content-center w-100 h-100 p-3">
                                 <img src="{{ img.image.url }}" alt="{{ img.alt_text|default:product.name }}" class="mw-100 mh-100 object-fit-contain">
                             </div>
@@ -55,9 +59,12 @@
             <!-- Thumbnail Indicators (Click or Touch to switch photo) -->
             <div class="d-flex gap-2 overflow-auto pb-2 justify-content-center justify-content-lg-start">
                 {% for img in product.images.all %}
-                <button type="button" data-bs-target="#productDetailCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="btn p-1 glass-card border-secondary opacity-75 {% if forloop.first %}border-cyan opacity-100{% endif %}" style="width: 75px; height: 75px; flex-shrink: 0;" aria-label="Slide {{ forloop.counter }}">
-                    <img src="{{ img.image.url }}" alt="{{ img.alt_text|default:product.name }}" class="w-100 h-100 object-fit-contain rounded-2">
-                </button>
+                <div class="text-center" style="flex-shrink: 0;">
+                    <button type="button" data-bs-target="#productDetailCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="btn p-1 glass-card border-secondary opacity-75 {% if forloop.first %}border-cyan opacity-100{% endif %}" style="width: 75px; height: 75px;" title="{{ img.get_view_type_display }}" aria-label="{{ img.get_view_type_display }}">
+                        <img src="{{ img.image.url }}" alt="{{ img.alt_text|default:product.name }}" class="w-100 h-100 object-fit-contain rounded-2">
+                    </button>
+                    <small class="d-block text-cyan fw-semibold text-truncate mt-1" style="font-size: 0.65rem; max-width: 75px;">{{ img.get_view_type_display }}</small>
+                </div>
                 {% endfor %}
             </div>
             {% endif %}

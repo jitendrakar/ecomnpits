@@ -7,6 +7,7 @@ from .models import (
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
+    fields = ('image', 'view_type', 'is_primary', 'sort_order', 'alt_text')
     extra = 1
 
 
