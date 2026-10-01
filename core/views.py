@@ -96,6 +96,37 @@ def page_detail_view(request, slug):
     return render(request, 'page_detail.html', {'page': page})
 
 
+def submit_review_view(request):
+    if request.method == 'POST':
+        customer_name = request.POST.get('customer_name', '').strip()
+        company = request.POST.get('company', '').strip()
+        rating = request.POST.get('rating', '5')
+        review = request.POST.get('review', '').strip()
+
+        if customer_name and review:
+            try:
+                rating_val = int(rating)
+                if rating_val < 1: rating_val = 1
+                if rating_val > 5: rating_val = 5
+            except ValueError:
+                rating_val = 5
+
+            Testimonial.objects.create(
+                customer_name=customer_name,
+                company=company,
+                designation="Verified Customer",
+                rating=rating_val,
+                review=review,
+                is_featured=True,
+                is_active=True,
+            )
+            messages.success(request, "Thank you! Your review has been submitted and published successfully.")
+        else:
+            messages.error(request, "Please fill in your name and review before submitting.")
+
+    return redirect(request.META.get('HTTP_REFERER', 'core:home'))
+
+
 def robots_view(request):
     content = """User-agent: *
 Allow: /
