@@ -21,7 +21,7 @@
 
                 <div class="d-flex flex-wrap gap-3 justify-content-center">
                     {% if site_settings.whatsapp_number %}
-                    <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20just%20submitted%20an%20enquiry%20on%20your%20website." 
+                    <a href="https://api.whatsapp.com/send?phone={{ site_settings.whatsapp_number }}&text=Hello,%20I%20just%20submitted%20an%20enquiry%20on%20your%20website." 
                        target="_blank" 
                        class="btn btn-cyan btn-lg">
                         <i class="bi bi-whatsapp me-2"></i> WhatsApp Us Now

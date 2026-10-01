@@ -1,5 +1,5 @@
 {% if site_settings and site_settings.whatsapp_number %}
-<a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello%20Nehru%20Place%20IT%20Services,%20I%20am%20interested%20in%20your%20IT%20products%20and%20services." 
+<a href="https://api.whatsapp.com/send?phone={{ site_settings.whatsapp_number }}&text=Hello%20Nehru%20Place%20IT%20Services,%20I%20am%20interested%20in%20your%20IT%20products%20and%20services." 
    target="_blank" 
    class="whatsapp-float" 
    title="Chat with Us on WhatsApp">

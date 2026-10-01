@@ -115,7 +115,7 @@
 
             <!-- DIRECT INQUIRY BUTTONS -->
             <div class="d-flex flex-wrap gap-3 mb-4">
-                <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20am%20interested%20in%20purchasing:%20{{ product.name|urlencode }}%20(SKU:%20{{ product.sku }}).%20Please%20provide%20details." 
+                <a href="https://api.whatsapp.com/send?phone={{ site_settings.whatsapp_number }}&text=Hello,%20I%20am%20interested%20in%20purchasing:%20{{ product.name|urlencode }}%20(SKU:%20{{ product.sku }}).%20Please%20provide%20details." 
                    target="_blank" 
                    class="btn btn-outline-cyan btn-lg">
                     <i class="bi bi-whatsapp me-2"></i> Ask About This Product
@@ -244,7 +244,7 @@
                             <li class="mb-2">For items purchased via Amazon, Flipkart, or Meesho, present invoice for authorized service support.</li>
                         </ul>
 
-                        <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20need%20warranty%20support%20for:%20{{ product.name|urlencode }}%20(SKU:%20{{ product.sku }})." target="_blank" class="btn btn-sm btn-cyan mt-2">
+                        <a href="https://api.whatsapp.com/send?phone={{ site_settings.whatsapp_number }}&text=Hello,%20I%20need%20warranty%20support%20for:%20{{ product.name|urlencode }}%20(SKU:%20{{ product.sku }})." target="_blank" class="btn btn-sm btn-cyan mt-2">
                             <i class="bi bi-shield-lock me-1"></i> Contact Warranty Helpdesk
                         </a>
                     </div>
@@ -325,7 +325,7 @@
                                     <li class="mb-2"><strong>Technical Assistance:</strong> For urgent installation help, contact certified Nehru Place IT engineers.</li>
                                 </ol>
 
-                                <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20need%20installation%20help%20for%20{{ product.name|urlencode }}." target="_blank" class="btn btn-outline-cyan btn-sm">
+                                <a href="https://api.whatsapp.com/send?phone={{ site_settings.whatsapp_number }}&text=Hello,%20I%20need%20installation%20help%20for%20{{ product.name|urlencode }}." target="_blank" class="btn btn-outline-cyan btn-sm">
                                     <i class="bi bi-whatsapp me-1"></i> Request Tech Setup Assistance
                                 </a>
                             </div>

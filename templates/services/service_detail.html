@@ -35,7 +35,7 @@
                 <button type="button" class="btn btn-cyan btn-lg" data-bs-toggle="modal" data-bs-target="#serviceEnquiryModal">
                     <i class="bi bi-send me-2"></i> Request Service Quote
                 </button>
-                <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello,%20I%20am%20interested%20in%20service:%20{{ service.name|urlencode }}.%20Please%20provide%20pricing%20details." 
+                <a href="https://api.whatsapp.com/send?phone={{ site_settings.whatsapp_number }}&text=Hello,%20I%20am%20interested%20in%20service:%20{{ service.name|urlencode }}.%20Please%20provide%20pricing%20details." 
                    target="_blank" 
                    class="btn btn-outline-cyan btn-lg">
                     <i class="bi bi-whatsapp me-2"></i> Chat on WhatsApp
