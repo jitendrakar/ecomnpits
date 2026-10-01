@@ -363,6 +363,23 @@ a:hover {
     transform: scale(1.06);
 }
 
+/* Product Detail Gallery Carousel - Locked Height & Zero Bounce */
+#productDetailCarousel .prod-gallery-inner {
+    height: 420px;
+    background: #FFFFFF;
+}
+
+#productDetailCarousel .carousel-item {
+    height: 420px;
+}
+
+@media (max-width: 576px) {
+    #productDetailCarousel .prod-gallery-inner,
+    #productDetailCarousel .carousel-item {
+        height: 320px;
+    }
+}
+
 .badge-stock {
     position: absolute;
     top: 12px; right: 12px;

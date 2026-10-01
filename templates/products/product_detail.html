@@ -17,22 +17,47 @@
     </nav>
 
     <div class="row g-5">
-        <!-- PRODUCT IMAGES -->
+        <!-- PRODUCT IMAGES CAROUSEL (TOUCH SWIPEABLE & ZERO BOUNCE) -->
         <div class="col-lg-6">
-            <div class="glass-card p-4 text-center mb-3">
-                {% if product.primary_image %}
-                    <img id="mainProductImg" src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="img-fluid rounded-3" style="max-height: 420px; object-fit: contain;">
-                {% else %}
-                    <i class="bi bi-laptop display-1 text-muted"></i>
+            <div id="productDetailCarousel" class="carousel slide border border-secondary rounded-3 overflow-hidden shadow-sm bg-white mb-3" data-bs-ride="false" data-bs-touch="true">
+                <div class="carousel-inner prod-gallery-inner">
+                    {% if product.images.all %}
+                        {% for img in product.images.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %} h-100">
+                            <div class="d-flex align-items-center justify-content-center w-100 h-100 p-3">
+                                <img src="{{ img.image.url }}" alt="{{ img.alt_text|default:product.name }}" class="mw-100 mh-100 object-fit-contain">
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="carousel-item active h-100">
+                            <div class="d-flex align-items-center justify-content-center w-100 h-100 p-3">
+                                <i class="bi bi-laptop display-1 text-muted"></i>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if product.images.count > 1 %}
+                <!-- Touch Slide Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#productDetailCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3 border border-cyan opacity-75" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productDetailCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3 border border-cyan opacity-75" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
                 {% endif %}
             </div>
 
             {% if product.images.count > 1 %}
-            <div class="d-flex gap-2 overflow-auto pb-2">
+            <!-- Thumbnail Indicators (Click or Touch to switch photo) -->
+            <div class="d-flex gap-2 overflow-auto pb-2 justify-content-center justify-content-lg-start">
                 {% for img in product.images.all %}
-                <div class="glass-card p-2 cursor-pointer border-secondary" style="width: 80px; height: 80px;" onclick="document.getElementById('mainProductImg').src='{{ img.image.url }}';">
-                    <img src="{{ img.image.url }}" alt="{{ img.alt_text }}" class="w-100 h-100 object-fit-contain">
-                </div>
+                <button type="button" data-bs-target="#productDetailCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="btn p-1 glass-card border-secondary opacity-75 {% if forloop.first %}border-cyan opacity-100{% endif %}" style="width: 75px; height: 75px; flex-shrink: 0;" aria-label="Slide {{ forloop.counter }}">
+                    <img src="{{ img.image.url }}" alt="{{ img.alt_text|default:product.name }}" class="w-100 h-100 object-fit-contain rounded-2">
+                </button>
                 {% endfor %}
             </div>
             {% endif %}
