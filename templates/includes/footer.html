@@ -3,39 +3,39 @@
         <div class="row g-4 mb-5">
             <div class="col-lg-4 col-md-6">
                 <h5 class="brand-title mb-3">{{ site_settings.company_name }}</h5>
-                <p class="small text-muted mb-3">{{ site_settings.footer_text }}</p>
+                <p class="small footer-desc mb-3">{{ site_settings.footer_text }}</p>
                 <div class="d-flex gap-3 fs-5">
-                    {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" target="_blank" class="text-muted"><i class="bi bi-facebook"></i></a>{% endif %}
-                    {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank" class="text-muted"><i class="bi bi-instagram"></i></a>{% endif %}
-                    {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank" class="text-muted"><i class="bi bi-linkedin"></i></a>{% endif %}
+                    {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" target="_blank" class="footer-link"><i class="bi bi-facebook"></i></a>{% endif %}
+                    {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank" class="footer-link"><i class="bi bi-instagram"></i></a>{% endif %}
+                    {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank" class="footer-link"><i class="bi bi-linkedin"></i></a>{% endif %}
                 </div>
             </div>
 
             <div class="col-lg-2 col-md-6">
-                <h6 class="text-white fw-bold mb-3">Quick Links</h6>
+                <h6 class="footer-heading fw-bold mb-3">Quick Links</h6>
                 <ul class="list-unstyled small">
-                    <li class="mb-2"><a href="{% url 'core:home' %}" class="text-muted">Home</a></li>
-                    <li class="mb-2"><a href="{% url 'products:product_list' %}" class="text-muted">Products Catalog</a></li>
-                    <li class="mb-2"><a href="{% url 'services:service_list' %}" class="text-muted">IT Services</a></li>
-                    <li class="mb-2"><a href="{% url 'services:cctv_calculator' %}" class="text-muted">Service & Support Calculator</a></li>
-                    <li class="mb-2"><a href="{% url 'core:about' %}" class="text-muted">About Us</a></li>
+                    <li class="mb-2"><a href="{% url 'core:home' %}" class="footer-link">Home</a></li>
+                    <li class="mb-2"><a href="{% url 'products:product_list' %}" class="footer-link">Products Catalog</a></li>
+                    <li class="mb-2"><a href="{% url 'services:service_list' %}" class="footer-link">IT Services</a></li>
+                    <li class="mb-2"><a href="{% url 'services:cctv_calculator' %}" class="footer-link">Service &amp; Support Calculator</a></li>
+                    <li class="mb-2"><a href="{% url 'core:about' %}" class="footer-link">About Us</a></li>
                 </ul>
             </div>
 
             <div class="col-lg-3 col-md-6">
-                <h6 class="text-white fw-bold mb-3">IT Services & Solutions</h6>
-                <ul class="list-unstyled small text-muted">
-                    <li class="mb-2">Website & Dynamic Web Apps</li>
-                    <li class="mb-2">HD & IP CCTV Installation</li>
-                    <li class="mb-2">Office LAN & Wi-Fi Networking</li>
-                    <li class="mb-2">Computer & Laptop Repair</li>
-                    <li class="mb-2">Corporate IT Support & AMC</li>
+                <h6 class="footer-heading fw-bold mb-3">IT Services &amp; Solutions</h6>
+                <ul class="list-unstyled small footer-text">
+                    <li class="mb-2">Website &amp; Dynamic Web Apps</li>
+                    <li class="mb-2">HD &amp; IP CCTV Installation</li>
+                    <li class="mb-2">Office LAN &amp; Wi-Fi Networking</li>
+                    <li class="mb-2">Computer &amp; Laptop Repair</li>
+                    <li class="mb-2">Corporate IT Support &amp; AMC</li>
                 </ul>
             </div>
 
             <div class="col-lg-3 col-md-6">
-                <h6 class="text-white fw-bold mb-3">Contact Information</h6>
-                <ul class="list-unstyled small text-muted">
+                <h6 class="footer-heading fw-bold mb-3">Contact Information</h6>
+                <ul class="list-unstyled small footer-text">
                     <li class="mb-2"><i class="bi bi-geo-alt text-cyan me-2"></i> {{ site_settings.address }}</li>
                     <li class="mb-2"><i class="bi bi-telephone text-cyan me-2"></i> {{ site_settings.phone }}</li>
                     <li class="mb-2"><i class="bi bi-envelope text-cyan me-2"></i> {{ site_settings.email }}</li>
@@ -46,11 +46,11 @@
 
         <hr class="border-secondary opacity-25">
 
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-muted">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small footer-text">
             <p class="mb-2 mb-md-0">&copy; {% now "Y" %} {{ site_settings.company_name }}. All Rights Reserved.</p>
             <div class="d-flex gap-3">
-                <a href="{% url 'core:page_detail' 'privacy-policy' %}" class="text-muted">Privacy Policy</a>
-                <a href="{% url 'core:page_detail' 'terms-and-conditions' %}" class="text-muted">Terms of Service</a>
+                <a href="{% url 'core:page_detail' 'privacy-policy' %}" class="footer-link">Privacy Policy</a>
+                <a href="{% url 'core:page_detail' 'terms-and-conditions' %}" class="footer-link">Terms of Service</a>
             </div>
         </div>
     </div>
