@@ -11,8 +11,12 @@
             <p class="text-muted small mb-0">Showing {{ total_count }} active products with direct external marketplace purchasing options.</p>
         </div>
         <div class="col-md-6 mt-3 mt-md-0">
-            <form method="get" action="{% url 'products:product_list' %}" class="d-flex gap-2">
-                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search product name, SKU, brand...">
+            <form method="get" action="{% url 'products:product_list' %}" class="d-flex gap-2 position-relative" id="productSearchForm">
+                <div class="position-relative flex-grow-1">
+                    <input type="text" name="q" id="productSearchInput" value="{{ query }}" class="form-control" placeholder="Search product name, SKU, brand, specification (e.g. USB, Mouse)..." autocomplete="off">
+                    <div id="searchResultsDropdown" class="glass-card shadow-lg position-absolute top-100 start-0 w-100 mt-1 d-none rounded-3 border-cyan overflow-hidden" style="z-index: 1050; max-height: 400px; overflow-y: auto; background: #0f172a;">
+                    </div>
+                </div>
                 <button type="submit" class="btn btn-cyan"><i class="bi bi-search"></i> Search</button>
             </form>
         </div>

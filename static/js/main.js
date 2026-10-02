@@ -5,6 +5,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     initThemeToggle();
     initCCTVCalculator();
+    initLiveSearch();
 });
 
 function initThemeToggle() {
@@ -114,4 +115,78 @@ TOTAL ESTIMATED COST: ₹${grandTotal.toLocaleString('en-IN')}`;
 
     // Initial calculation on page load
     calculate();
+}
+
+function initLiveSearch() {
+    const searchInputs = document.querySelectorAll('input[name="q"], #productSearchInput');
+    if (!searchInputs.length) return;
+
+    searchInputs.forEach(input => {
+        let dropdown = input.nextElementSibling;
+        if (!dropdown || (!dropdown.classList.contains('searchResultsDropdown') && dropdown.id !== 'searchResultsDropdown')) {
+            dropdown = document.createElement('div');
+            dropdown.className = 'glass-card shadow-lg position-absolute top-100 start-0 w-100 mt-1 d-none rounded-3 border-cyan overflow-hidden';
+            dropdown.style.zIndex = '1050';
+            dropdown.style.maxHeight = '400px';
+            dropdown.style.overflowY = 'auto';
+            dropdown.style.background = '#0f172a';
+            input.parentNode.style.position = 'relative';
+            input.parentNode.appendChild(dropdown);
+        }
+
+        let debounceTimer;
+
+        input.addEventListener('input', function () {
+            clearTimeout(debounceTimer);
+            const query = this.value.trim();
+
+            if (query.length < 2) {
+                dropdown.classList.add('d-none');
+                dropdown.innerHTML = '';
+                return;
+            }
+
+            debounceTimer = setTimeout(() => {
+                fetch('/products/search-suggestions/?q=' + encodeURIComponent(query))
+                    .then(res => res.json())
+                    .then(data => {
+                        const suggestions = data.suggestions || [];
+                        if (!suggestions.length) {
+                            dropdown.innerHTML = '<div class="p-3 text-muted small text-center"><i class="bi bi-info-circle me-1"></i> No matching products or specifications found</div>';
+                            dropdown.classList.remove('d-none');
+                            return;
+                        }
+
+                        let html = '<div class="list-group list-group-flush bg-transparent">';
+                        suggestions.forEach(item => {
+                            const imgHtml = item.image ? `<img src="${item.image}" alt="${item.name}" class="rounded p-1 bg-white me-2" style="width: 40px; height: 40px; object-fit: contain;">` : `<div class="rounded p-1 bg-dark text-cyan me-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-laptop"></i></div>`;
+                            html += `
+                                <a href="${item.url}" class="list-group-item list-group-item-action bg-dark text-white border-secondary p-2 d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center text-truncate me-2">
+                                        ${imgHtml}
+                                        <div class="text-truncate">
+                                            <div class="fw-bold text-white small text-truncate">${item.name}</div>
+                                            <small class="text-cyan" style="font-size: 0.7rem;">SKU: ${item.sku} | ${item.category}</small>
+                                        </div>
+                                    </div>
+                                    <span class="badge bg-dark border border-cyan text-cyan text-nowrap">${item.price}</span>
+                                </a>
+                            `;
+                        });
+                        html += '</div>';
+                        dropdown.innerHTML = html;
+                        dropdown.classList.remove('d-none');
+                    })
+                    .catch(() => {
+                        dropdown.classList.add('d-none');
+                    });
+            }, 200);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('d-none');
+            }
+        });
+    });
 }

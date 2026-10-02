@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
 from .models import Product, ProductCategory, Brand, ProductMarketplaceLink, MarketplaceClick
@@ -24,8 +25,10 @@ def product_list_view(request):
             Q(brand__name__icontains=query) |
             Q(category__name__icontains=query) |
             Q(description__icontains=query) |
-            Q(short_description__icontains=query)
-        )
+            Q(short_description__icontains=query) |
+            Q(specifications__specification_name__icontains=query) |
+            Q(specifications__specification_value__icontains=query)
+        ).distinct()
 
     current_category = None
     if category_slug:
@@ -139,3 +142,38 @@ def marketplace_redirect_view(request, link_id):
     )
 
     return redirect(link.url)
+
+
+def product_search_suggestions_view(request):
+    query = request.GET.get('q', '').strip()
+    if not query or len(query) < 2:
+        return JsonResponse({'suggestions': []})
+
+    products = Product.objects.filter(is_active=True).filter(
+        Q(name__icontains=query) |
+        Q(sku__icontains=query) |
+        Q(brand__name__icontains=query) |
+        Q(category__name__icontains=query) |
+        Q(description__icontains=query) |
+        Q(short_description__icontains=query) |
+        Q(specifications__specification_name__icontains=query) |
+        Q(specifications__specification_value__icontains=query)
+    ).select_related('category', 'brand').prefetch_related('images').distinct()[:8]
+
+    suggestions = []
+    for p in products:
+        primary_img = p.primary_image
+        img_url = primary_img.image.url if (primary_img and primary_img.image) else ''
+        suggestions.append({
+            'id': p.id,
+            'name': p.name,
+            'slug': p.slug,
+            'sku': p.sku,
+            'category': p.category.name if p.category else '',
+            'brand': p.brand.name if p.brand else '',
+            'price': f"₹{p.current_price:.2f}",
+            'image': img_url,
+            'url': f"/products/{p.slug}/"
+        })
+
+    return JsonResponse({'suggestions': suggestions})
