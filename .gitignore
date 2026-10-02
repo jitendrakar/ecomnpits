@@ -2,8 +2,6 @@
 __pycache__/
 *.sqlite3
 .env
-.env.backup
-*.backup
 venv/
 env/
 .idea/

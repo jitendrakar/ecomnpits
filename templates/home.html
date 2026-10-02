@@ -68,7 +68,7 @@
             <div class="col-lg-5">
                 <div class="glass-card p-4 text-center position-relative">
                     <div class="position-absolute top-0 start-50 translate-middle badge bg-primary px-3 py-2">NEHRU PLACE IT HUB</div>
-                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" alt="IT Services" class="img-fluid rounded-3 mb-3 border border-secondary">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" alt="IT Services" class="img-fluid rounded-3 mb-3 border border-secondary" style="max-height: 180px; object-fit: cover; width: 100%;">
                     <h5 class="text-white fw-bold mb-1">Instant Tech Assistance</h5>
                     <p class="text-muted small mb-3">Looking for urgent hardware repair, custom PC builds, or CCTV quotes?</p>
                     <a href="tel:{{ site_settings.phone }}" class="btn btn-sm btn-cyan w-100 mb-2">
@@ -125,16 +125,20 @@
 
                         <p class="text-muted small mb-3 flex-grow-1">{{ product.short_description|truncatechars:90 }}</p>
 
-                        <div class="d-flex align-items-baseline mb-3">
-                            <span class="price-tag">₹{{ product.current_price|floatformat:2 }}</span>
-                            {% if product.discount_price and product.discount_price < product.price %}
-                                <span class="old-price">₹{{ product.price|floatformat:2 }}</span>
-                            {% endif %}
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-3">
+                            <div class="d-flex align-items-baseline gap-2">
+                                <span class="price-tag">₹{{ product.current_price|floatformat:2 }}</span>
+                                {% if product.discount_price and product.discount_price < product.price %}
+                                    <span class="old-price">₹{{ product.price|floatformat:2 }}</span>
+                                {% endif %}
+                            </div>
+                            <span class="text-cyan fw-semibold d-inline-flex align-items-center gap-1 ms-auto" style="font-size: 0.72rem;">
+                                <i class="bi bi-tag-fill"></i> Visit E-Com Sites for Available Bank &amp; Other Offers
+                            </span>
                         </div>
 
                         <!-- External Marketplace Links -->
                         <div class="mb-3">
-                            <div class="small text-muted mb-1">Buy External:</div>
                             <div class="d-flex flex-wrap gap-2">
                                 {% for link in product.marketplace_links.all %}
                                     {% if link.is_active and link.marketplace.is_active %}

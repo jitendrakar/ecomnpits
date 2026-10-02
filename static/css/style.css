@@ -339,20 +339,29 @@ a:hover {
 
 .product-img-wrapper {
     position: relative;
-    height: 230px;
+    height: 180px;
     overflow: hidden;
     border-radius: 12px 12px 0 0;
-    background: #FFFFFF;
+    background: #0F172A;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     padding: 8px;
+    transition: background-color 0.3s ease, height 0.3s ease;
+}
+
+[data-theme="light"] .product-img-wrapper {
+    background: #FFFFFF;
+}
+
+[data-theme="dark"] .product-img-wrapper {
+    background: #0F172A;
 }
 
 .product-img {
-    max-height: 214px;
-    max-width: 98%;
+    max-height: 164px;
+    max-width: 95%;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -363,13 +372,26 @@ a:hover {
     transform: scale(1.06);
 }
 
-/* Product Detail Gallery Carousel - Rigid Fixed Height & Zero Bounce */
+/* Product Detail Gallery Carousel - 100% Full Unclipped Product Image Display */
 #productDetailCarousel {
-    min-height: 400px !important;
-    height: 400px !important;
-    max-height: 400px !important;
+    width: 100% !important;
+    height: 440px !important;
+    min-height: 440px !important;
+    max-height: 440px !important;
     overflow: hidden !important;
-    background: #FFFFFF !important;
+    border-radius: 0.75rem;
+    transition: background-color 0.3s ease;
+}
+
+#productDetailCarousel.bg-white,
+#productDetailCarousel.bg-white .prod-gallery-inner {
+    background-color: #FFFFFF !important;
+}
+
+#productDetailCarousel.bg-dark-glass,
+#productDetailCarousel.bg-dark-glass .prod-gallery-inner {
+    background-color: rgba(15, 23, 42, 0.75) !important;
+    backdrop-filter: blur(10px);
 }
 
 #productDetailCarousel .prod-gallery-inner {
@@ -378,7 +400,6 @@ a:hover {
     grid-template-rows: 1fr !important;
     height: 100% !important;
     width: 100% !important;
-    background: #FFFFFF !important;
     align-items: center !important;
     justify-content: center !important;
 }
@@ -397,6 +418,7 @@ a:hover {
     z-index: 1;
     float: none !important;
     margin-right: 0 !important;
+    padding: 0.5rem !important;
 }
 
 #productDetailCarousel .carousel-item.active,
@@ -408,13 +430,24 @@ a:hover {
     z-index: 2;
 }
 
-@media (max-width: 768px) {
+#productDetailCarousel img,
+#productDetailCarousel .prod-detail-img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    margin: auto !important;
+    cursor: pointer;
+}
+
+@media (max-width: 575.98px) {
     #productDetailCarousel,
     #productDetailCarousel .prod-gallery-inner,
     #productDetailCarousel .carousel-item {
-        min-height: 300px !important;
-        height: 300px !important;
-        max-height: 300px !important;
+        height: 320px !important;
+        min-height: 320px !important;
+        max-height: 320px !important;
     }
 }
 
