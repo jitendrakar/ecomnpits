@@ -379,19 +379,8 @@ a:hover {
     min-height: 440px !important;
     max-height: 440px !important;
     overflow: hidden !important;
+    background: #FFFFFF !important;
     border-radius: 0.75rem;
-    transition: background-color 0.3s ease;
-}
-
-#productDetailCarousel.bg-white,
-#productDetailCarousel.bg-white .prod-gallery-inner {
-    background-color: #FFFFFF !important;
-}
-
-#productDetailCarousel.bg-dark-glass,
-#productDetailCarousel.bg-dark-glass .prod-gallery-inner {
-    background-color: rgba(15, 23, 42, 0.75) !important;
-    backdrop-filter: blur(10px);
 }
 
 #productDetailCarousel .prod-gallery-inner {
@@ -400,6 +389,7 @@ a:hover {
     grid-template-rows: 1fr !important;
     height: 100% !important;
     width: 100% !important;
+    background: #FFFFFF !important;
     align-items: center !important;
     justify-content: center !important;
 }
