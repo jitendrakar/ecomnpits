@@ -6,6 +6,78 @@ from .models import Product, ProductCategory, Brand, ProductMarketplaceLink, Mar
 from enquiries.forms import EnquiryForm
 
 
+STOP_WORDS = {'the', 'a', 'an', 'for', 'with', 'in', 'and', 'or', 'of', 'to', 'is', 'at', 'by', 'on', 'it', 'this', 'that'}
+
+
+def get_search_words(query_str):
+    raw_words = query_str.strip().split()
+    words = [w for w in raw_words if len(w) > 1 and w.lower() not in STOP_WORDS]
+    if not words:
+        words = [w for w in raw_words if len(w) > 0]
+    return words
+
+
+def build_single_word_q(word):
+    return (
+        Q(name__icontains=word) |
+        Q(sku__icontains=word) |
+        Q(brand__name__icontains=word) |
+        Q(category__name__icontains=word) |
+        Q(description__icontains=word) |
+        Q(short_description__icontains=word) |
+        Q(specifications__specification_name__icontains=word) |
+        Q(specifications__specification_value__icontains=word)
+    )
+
+
+def search_products_smart(base_qs, query_str, limit=None):
+    query_str = query_str.strip()
+    if not query_str:
+        return base_qs
+
+    words = get_search_words(query_str)
+    if not words:
+        return base_qs.none()
+
+    # 1. Try EXACT Full Phrase match
+    exact_q = build_single_word_q(query_str)
+    exact_pks = list(base_qs.filter(exact_q).values_list('pk', flat=True).distinct())
+
+    # 2. Try ALL words match (AND query)
+    all_words_q = Q()
+    for word in words:
+        all_words_q &= build_single_word_q(word)
+    all_words_pks = list(base_qs.filter(all_words_q).values_list('pk', flat=True).distinct())
+
+    # 3. Try ANY word match (OR query for multi-word 4-5 word queries)
+    any_words_q = Q()
+    for word in words:
+        any_words_q |= build_single_word_q(word)
+    any_words_pks = list(base_qs.filter(any_words_q).values_list('pk', flat=True).distinct())
+
+    # Combine PKs in order of relevance (exact phrase > all words > any related words)
+    seen = set()
+    ordered_pks = []
+
+    for pk in exact_pks + all_words_pks + any_words_pks:
+        if pk not in seen:
+            seen.add(pk)
+            ordered_pks.append(pk)
+
+    if limit and len(ordered_pks) > limit:
+        ordered_pks = ordered_pks[:limit]
+
+    if not ordered_pks:
+        return base_qs.none()
+
+    # Preserve exact relevance order
+    clauses = ' '.join([f"WHEN id={pk} THEN {i}" for i, pk in enumerate(ordered_pks)])
+    return base_qs.filter(pk__in=ordered_pks).extra(
+        select={'relevance_rank': f"CASE {clauses} END"},
+        order_by=['relevance_rank']
+    )
+
+
 def product_list_view(request):
     products = Product.objects.filter(is_active=True).select_related('category', 'brand').prefetch_related('images', 'marketplace_links')
 
@@ -19,16 +91,7 @@ def product_list_view(request):
     sort = request.GET.get('sort', 'newest').strip()
 
     if query:
-        products = products.filter(
-            Q(name__icontains=query) |
-            Q(sku__icontains=query) |
-            Q(brand__name__icontains=query) |
-            Q(category__name__icontains=query) |
-            Q(description__icontains=query) |
-            Q(short_description__icontains=query) |
-            Q(specifications__specification_name__icontains=query) |
-            Q(specifications__specification_value__icontains=query)
-        ).distinct()
+        products = search_products_smart(products, query)
 
     current_category = None
     if category_slug:
@@ -149,16 +212,8 @@ def product_search_suggestions_view(request):
     if not query or len(query) < 2:
         return JsonResponse({'suggestions': []})
 
-    products = Product.objects.filter(is_active=True).filter(
-        Q(name__icontains=query) |
-        Q(sku__icontains=query) |
-        Q(brand__name__icontains=query) |
-        Q(category__name__icontains=query) |
-        Q(description__icontains=query) |
-        Q(short_description__icontains=query) |
-        Q(specifications__specification_name__icontains=query) |
-        Q(specifications__specification_value__icontains=query)
-    ).select_related('category', 'brand').prefetch_related('images').distinct()[:8]
+    base_qs = Product.objects.filter(is_active=True).select_related('category', 'brand').prefetch_related('images')
+    products = search_products_smart(base_qs, query, limit=8)
 
     suggestions = []
     for p in products:
