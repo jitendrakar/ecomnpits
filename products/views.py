@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value, IntegerField
 from django.core.paginator import Paginator
 from .models import Product, ProductCategory, Brand, ProductMarketplaceLink, MarketplaceClick
 from enquiries.forms import EnquiryForm
@@ -70,12 +70,11 @@ def search_products_smart(base_qs, query_str, limit=None):
     if not ordered_pks:
         return base_qs.none()
 
-    # Preserve exact relevance order
-    clauses = ' '.join([f"WHEN id={pk} THEN {i}" for i, pk in enumerate(ordered_pks)])
-    return base_qs.filter(pk__in=ordered_pks).extra(
-        select={'relevance_rank': f"CASE {clauses} END"},
-        order_by=['relevance_rank']
-    )
+    # Preserve exact relevance order safely across database engines
+    whens = [When(pk=pk, then=Value(i)) for i, pk in enumerate(ordered_pks)]
+    return base_qs.filter(pk__in=ordered_pks).annotate(
+        relevance_rank=Case(*whens, output_field=IntegerField())
+    ).order_by('relevance_rank')
 
 
 def product_list_view(request):
@@ -88,8 +87,9 @@ def product_list_view(request):
     max_price = request.GET.get('max_price', '').strip()
     warranty = request.GET.get('warranty', '').strip()
     stock = request.GET.get('stock', '').strip()
-    sort = request.GET.get('sort', 'newest').strip()
+    sort = request.GET.get('sort', '').strip()
 
+    has_query = bool(query)
     if query:
         products = search_products_smart(products, query)
 
@@ -127,7 +127,9 @@ def product_list_view(request):
         products = products.order_by('-price')
     elif sort == 'name':
         products = products.order_by('name')
-    else:
+    elif sort == 'newest':
+        products = products.order_by('-created_at')
+    elif not has_query:
         products = products.order_by('-created_at')
 
     paginator = Paginator(products, 12)
